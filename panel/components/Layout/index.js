@@ -38,6 +38,8 @@ const Layout = ({children}) => {
           <Menu.Nav>
             <Menu.NavItem href='/' Icon ={MdHomeFilled}>Home</Menu.NavItem>
             <Menu.NavItem href='/categories' Icon ={MdCategory}>Categories</Menu.NavItem>
+            <Menu.NavItem href='/products' Icon ={MdCategory}>Products</Menu.NavItem>
+            <Menu.NavItem href='/brands' Icon ={MdCategory}>Brands</Menu.NavItem>
           </Menu.Nav>
         </div>
         <div className='flex-1 flex flex-col overflow-hidden'>

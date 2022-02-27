@@ -4,10 +4,14 @@ import Title from '../components/Title'
 import Card from '../components/Card'
 import { MdHomeFilled } from 'react-icons/md'
 import Table from '../components/Table'
+import { useQuery } from '../lib/graphql'
+
+
 const Index = () => {
   return (
     <Layout>
       <Title>Home</Title>
+      
       <div className='mt-4'>
         <div className='flex flex-wrap -mx-6'>
           <Card>
