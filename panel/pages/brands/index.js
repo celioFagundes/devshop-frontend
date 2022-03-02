@@ -6,16 +6,15 @@ import { useMutation, useQuery } from '../../lib/graphql'
 import Link from 'next/link'
 import Button from '../../components/Button'
 import Alert from '../../components/Alert'
-import Image from 'next/image'
 
 const DELETE_BRAND = `
   mutation deleteBrand($id: String!) {
-    deleteBrand(id : $id)
+    panelDeleteBrand(id : $id)
   }
 `
 const REMOVE_BRAND_LOGO = `
   mutation removeBrandLogo($id: String!) {
-    removeBrandLogo(id : $id)
+    panelRemoveBrandLogo(id : $id)
   }
 `
 const GET_ALL_BRANDS = `

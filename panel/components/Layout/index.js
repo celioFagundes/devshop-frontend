@@ -1,7 +1,17 @@
 import React, { useState } from 'react'
 import Menu from '../Menu'
 import {MdCategory, MdHomeFilled} from 'react-icons/md'
+import { useQuery } from '../../lib/graphql'
+const GET_ME = `
+  query{
+  panelGetMe{
+    id
+    name
+    email
+  }
+}`
 const Layout = ({children}) => {
+  const { data, error, mutate } = useQuery(GET_ME)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [notificationOpen, setNotificationOpen] = useState(false)
@@ -40,6 +50,7 @@ const Layout = ({children}) => {
             <Menu.NavItem href='/categories' Icon ={MdCategory}>Categories</Menu.NavItem>
             <Menu.NavItem href='/products' Icon ={MdCategory}>Products</Menu.NavItem>
             <Menu.NavItem href='/brands' Icon ={MdCategory}>Brands</Menu.NavItem>
+            <Menu.NavItem href='/users' Icon ={MdCategory}>Users</Menu.NavItem>
           </Menu.Nav>
         </div>
         <div className='flex-1 flex flex-col overflow-hidden'>

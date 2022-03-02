@@ -28,7 +28,7 @@ const Input = ({
         name={name}
       />
       {errorMessage && (
-        <p class='text-red-500 text-xs italic'>{errorMessage}</p>
+        <p className='text-red-500 text-xs italic'>{errorMessage}</p>
       )}
       {helpText && (
         <p className='text-gray-600 text-xs italic mb-4'>{helpText} </p>

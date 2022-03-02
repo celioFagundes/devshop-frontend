@@ -9,7 +9,7 @@ import Input from '../../components/Input'
 import * as Yup from 'yup'
 const CREATE_CATEGORY = `
   mutation createCategory($name: String!, $slug: String!) {
-    createCategory (input: {
+    panelCreateCategory (input: {
       name:$name, 
       slug:$slug
      }) {
@@ -43,7 +43,7 @@ const CategorySchema = Yup.object().shape({
       return false
     }),
 })
-const Categories = () => {
+const CreateCategory = () => {
   const [data, createCategory] = useMutation(CREATE_CATEGORY)
   const router = useRouter()
   const form = useFormik({
@@ -101,4 +101,4 @@ const Categories = () => {
     </Layout>
   )
 }
-export default Categories
+export default CreateCategory

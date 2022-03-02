@@ -13,7 +13,7 @@ let id = ''
 const UPDATE_PRODUCT = `
     mutation updateProduct($id: String!, $name: String!, $slug: String!,$description: String!, 
       $category: String!) {
-        updateProduct (input: {
+        panelUpdateProduct (input: {
         id:$id,
         name:$name, 
         slug:$slug,
@@ -67,7 +67,7 @@ const ProductSchema = Yup.object().shape({
       return false
     }),
 })
-const Edit = () => {
+const EditProduct = () => {
   const router = useRouter()
   id = router.query.id
   const { data: categories, error } = useQuery(GET_ALL_CATEGORIES)
@@ -177,4 +177,4 @@ const Edit = () => {
     </Layout>
   )
 }
-export default Edit
+export default EditProduct

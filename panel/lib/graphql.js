@@ -1,18 +1,112 @@
 import { useState } from 'react'
 import useSWR from 'swr'
 
-const fetcher = async query => {
-  const res = await fetch(process.env.NEXT_PUBLIC_API, {
+const getNewAccessToken = async () => {
+  const getAccessToken = {
+    query: `
+      mutation getAccessToken($refreshToken: String!){
+        accessToken(refreshToken: $refreshToken)
+      }`,
+    variables: {
+      refreshToken: localStorage.getItem('refreshToken'),
+    },
+  }
+  const resAccessToken = await fetch(process.env.NEXT_PUBLIC_API, {
     headers: {
       'Content-type': 'application/json',
     },
     method: 'POST',
+    body: JSON.stringify(getAccessToken),
+  })
+  const jsonAccessToken = await resAccessToken.json()
+  return jsonAccessToken
+}
+const fetcher = async query => {
+  const accessToken = localStorage.getItem('accessToken')
+  const headers = {
+    'Content-type': 'application/json',
+  }
+  if (accessToken) {
+    headers['authorization'] = 'Bearer ' + accessToken
+  }
+  const res = await fetch(process.env.NEXT_PUBLIC_API, {
+    headers,
+    method: 'POST',
     body: query,
   })
   const resToJSON = await res.json()
-  return resToJSON
+  if (
+    !(
+      resToJSON.errors &&
+      resToJSON.errors[0] &&
+      resToJSON.errors[0].message === 'Forbidden resource'
+    )
+  ) {
+    return resToJSON
+  }
+  const jsonAccessToken = await getNewAccessToken()
+  console.log(jsonAccessToken)
+  if (jsonAccessToken.data) {
+    const newAccessToken = jsonAccessToken.data.accessToken
+    localStorage.setItem('accessToken', newAccessToken)
+    const newRes = await fetch(process.env.NEXT_PUBLIC_API, {
+      headers: {
+        'Content-type': 'application/json',
+        authorization: 'Bearer ' + newAccessToken,
+      },
+      method: 'POST',
+      body: query,
+    })
+    const newResToJSON = await newRes.json()
+    if (
+      !(
+        newResToJSON.errors &&
+        newResToJSON.errors[0] &&
+        newResToJSON.errors[0].message === 'Forbidden resource'
+      )
+    ) {
+      return newResToJSON
+    }
+  }
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem('accessToken')
+  window.location = '/'
+  return null
 }
-
+const uploader = async formData => {
+  const accessToken = localStorage.getItem('accessToken')
+  const headers = {}
+  if (accessToken) {
+    headers['authorization'] = 'Bearer ' + accessToken
+  }
+  const res = await fetch(process.env.NEXT_PUBLIC_API, {
+    headers,
+    method: 'POST',
+    body: formData,
+  })
+  const resToJSON = await res.json()
+  if (!resToJSON.errors) {
+    return resToJSON
+  }
+  const jsonAccessToken = await getNewAccessToken()
+  if (jsonAccessToken.data) {
+    const newAccessToken = jsonAccessToken.data.accessToken
+    localStorage.setItem('accessToken', newAccessToken)
+    const newRes = await fetch(process.env.NEXT_PUBLIC_API, {
+      headers: { authorization: 'Bearer ' + newAccessToken },
+      method: 'POST',
+      body: formData,
+    })
+    const newResToJSON = await newRes.json()
+    if (!newResToJSON.errors) {
+      return newResToJSON
+    }
+  }
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem('accessToken')
+  window.location = '/'
+  return null
+}
 const useQuery = queryStr => {
   const query = {
     query: queryStr,
@@ -37,16 +131,7 @@ const useMutation = query => {
   }
   return [data, mutate]
 }
-const uploader = async formData => {
-  const res = await fetch(process.env.NEXT_PUBLIC_API, {
-    headers: {},
-    method: 'POST',
-    body: formData,
-  })
-  const resToJSON = await res.json()
-  console.log(res)
-  return resToJSON
-}
+
 const useUpload = query => {
   const [data, setData] = useState(null)
   const mutate = async variables => {

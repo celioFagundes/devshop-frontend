@@ -11,7 +11,7 @@ import * as Yup from 'yup'
 let id = ''
 const UPDATE_CATEGORY = `
     mutation updateCategory($id: String!, $name: String!, $slug: String!) {
-        updateCategory (input: {
+        panelUpdateCategory (input: {
         id:$id,
         name:$name, 
         slug:$slug
@@ -49,7 +49,7 @@ const CategorySchema = Yup.object().shape({
       return false
     }),
 })
-const Edit = () => {
+const EditCategory = () => {
   const router = useRouter()
   id = router.query.id
   const { data } = useQuery(`
@@ -122,4 +122,4 @@ const Edit = () => {
     </Layout>
   )
 }
-export default Edit
+export default EditCategory
