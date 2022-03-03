@@ -9,6 +9,7 @@ const Input = ({
   name = '',
   helpText,
   errorMessage = '',
+  disabled,
 }) => {
   return (
     <div className='w-full mb-2'>
@@ -19,6 +20,7 @@ const Input = ({
         {label}
       </label>
       <input
+        disabled={disabled}
         className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4  mb-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
         type={type}
         id={'id-' + name}
