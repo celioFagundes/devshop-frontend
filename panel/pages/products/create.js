@@ -92,7 +92,6 @@ const CreateProduct = () => {
     },
     validationSchema: ProductSchema,
     onSubmit: async values => {
-      console.log('values ->', values)
       const newValues = {
         ...values,
         price: Number(values.price),
@@ -106,7 +105,7 @@ const CreateProduct = () => {
           stock: Number(variation.stock),
         })),
       }
-      console.log('new Values ->', values)
+      console.log(values.price, newValues.price)
       const data = await createProduct(newValues)
       if (data && !data.errors) {
         router.push('/products')

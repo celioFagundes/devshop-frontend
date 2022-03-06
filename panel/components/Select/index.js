@@ -25,7 +25,7 @@ const Select = ({
         placeholder={placeholder}
         onChange={onChange}
         name={name}
-        value={oldValue}
+        value={oldValue !=='' ? oldValue : value}
       >
         {value === '' && (
           <option value='' hidden>
