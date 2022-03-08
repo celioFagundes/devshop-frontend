@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { gql } from 'graphql-request'
 import Layout from '../../components/Layout'
-import { AiOutlineCaretDown } from 'react-icons/ai'
 import { fetcher } from '../../lib/graphql'
 import { useEffect } from 'react/cjs/react.development'
 import { useCart } from '../../lib/CartContext'
-/*<button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-            <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-            <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>*/
+
+const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
+
 const GET_ALL_CATEGORIES = gql`
   query {
     categories: getAllCategories {
@@ -45,8 +44,9 @@ const Products = ({ product, categories }) => {
   const [colorSelected, setColorSelected] = useState('')
   const [sizeSelected, setSizeSelected] = useState('')
   const [availableSizes, setAvailableSizes] = useState([])
-
-  //const possibleColors = [...new Set(product.variations.map(item => item.color.colorName))]
+  const [selectedVariation, setSelectedVariation] = useState(
+    product.variations[0],
+  )
   const possibleColors = product.variations.reduce(
     (prev, curr) => ({
       ...prev,
@@ -57,33 +57,49 @@ const Products = ({ product, categories }) => {
     }),
     {},
   )
-  /*
   useEffect(() => {
     const available = product.variations.filter(
-      prod => prod.optionName1 === colorSelected,
+      prod => prod.color.colorName === colorSelected,
     )
-    const sizes = available.map(item => item.optionName2)
+    const sizes = available.map(item => item.size)
     const sizesFilter = [...new Set(sizes.map(s => s))]
     setAvailableSizes(sizesFilter)
-  }, [colorSelected])*/
+  }, [colorSelected])
+  useEffect(() => {
+    const newSelected2 = product.variations
+      .filter(item => item.color.colorName === colorSelected)
+      .filter(item => item.size === availableSizes[0])
+    setSelectedVariation(newSelected2[0])
+  }, [availableSizes])
 
-  /*const selectedVariation = product.variations
-    .filter(item => item.optionName1 === colorSelected)
-    .filter(item => item.optionName2 === sizeSelected)
+  useEffect(() => {
+    if (product.variations[0]) {
+      setSelectedVariation(product.variations[0])
+      setColorSelected(product.variations[0].color.colorName)
+      const available = product.variations.filter(
+        prod => prod.color.colorName === product.variations[0].color.colorName,
+      )
+      const sizes = available.map(item => item.size)
+      const sizesFilter = [...new Set(sizes.map(s => s))]
+      setAvailableSizes(sizesFilter)
+    }
+  }, [product])
+  useEffect(() => {
+    if (colorSelected !== '' && sizeSelected !== '') {
+      const newSelected = product.variations
+        .filter(item => item.color.colorName === colorSelected)
+        .filter(item => item.size === sizeSelected)
+      setSelectedVariation(newSelected[0])
+    }
+  }, [colorSelected, sizeSelected])
 
-  const selectedPrice =
-    selectedVariation && selectedVariation[0] && selectedVariation[0].price
-      ? selectedVariation[0].price
-      : product.price*/
-  console.log(possibleColors)
-  Object.keys(possibleColors).map(item => {
-    console.log(possibleColors[item].name, possibleColors[item].code)
-  })
+  const sizeIsAvailable = size => {
+    return availableSizes.indexOf(size) >= 0
+  }
 
   return (
     <Layout categories={categories}>
       <div className='container px-5 py-24 mx-auto'>
-        <pre>{JSON.stringify(product, null, 2)}</pre>
         <div className='lg:w-4/5 mx-auto flex flex-wrap'>
           <img
             alt='ecommerce'
@@ -99,38 +115,62 @@ const Products = ({ product, categories }) => {
             </h1>
             <p className='leading-relaxed'>{product.description}</p>
             <div className=' mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5'>
-            <p className=' mr-3'>Cor :</p>
-              <div className='flex items-center'>           
+              <p className=' mr-3'>Cor :</p>
+              <div className='flex items-center'>
                 {Object.keys(possibleColors).map(item => (
-                  <div className='flex flex-col'>
+                  <div
+                    className='flex flex-col '
+                    key={possibleColors[item].name}
+                  >
                     <div className='mr-2'>
-                      <p className='capitalize text-xs text-gray-400'>{possibleColors[item].name}</p>
+                      <p className='capitalize text-xs text-gray-400 my-1'>
+                        {possibleColors[item].name}
+                      </p>
                       <button
-                        key={item.name}
+                        onClick={() => {
+                          setColorSelected(possibleColors[item].name)
+                          setSizeSelected('')
+                        }}
                         style={{ backgroundColor: possibleColors[item].code }}
-                        className='border-2 border-gray-300 ml-1  rounded-full w-6 h-6 focus:outline-none'
+                        className={`${
+                          selectedVariation &&
+                          selectedVariation.color.colorName ===
+                            possibleColors[item].name
+                            ? 'border-red-300'
+                            : 'border-gray-400'
+                        } border-2  ml-1  rounded-full w-6 h-6 focus:outline-none`}
                       ></button>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className='flex  items-center'>
-                <span className='mr-3'>Tamanho</span>
+              {colorSelected + '-' + sizeSelected + availableSizes[0]}
+              <pre>{JSON.stringify(selectedVariation, null, 2)}</pre>
+              <div className='flex flex-col '>
+                <span className='mr-3'>Tamanho:</span>
                 <div className='relative'>
-                  <select
-                    onChange={evt => setSizeSelected(evt.target.value)}
-                    className='rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10'
-                  >
-                    <option value='' hidden>
-                      Selecione
-                    </option>
-                  </select>
-                  <AiOutlineCaretDown
-                    size={12}
-                    className='absolute right-2 top-4'
-                  />
+                  {clothesSizes.map(size => (
+                    <button
+                      key={size}
+                      onClick={() =>
+                        sizeIsAvailable(size) && setSizeSelected(size)
+                      }
+                      className={`mr-2 my-1 ${
+                        sizeIsAvailable(size)
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-blue-400 before:'
+                      } ${
+                        selectedVariation &&
+                        selectedVariation.size === size &&
+                        'border-2 border-red-300 rounded'
+                      } py-2 px-2 rounded  font-bold text-xs`}
+                    >
+                      {size}
+                    </button>
+                  ))}
                 </div>
               </div>
+              <p>{selectedVariation && selectedVariation.price}</p>
             </div>
             <div className='flex'>
               <span className='title-font font-medium text-2xl text-gray-900'></span>
@@ -147,6 +187,11 @@ const Products = ({ product, categories }) => {
                 Remover do carrinho
               </button>
             </div>
+            <di>
+              <span className='mr-3'>
+                Peso: {selectedVariation && selectedVariation.weight}
+              </span>
+            </di>
           </div>
         </div>
       </div>
