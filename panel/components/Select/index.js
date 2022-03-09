@@ -12,7 +12,7 @@ const Select = ({
   errorMessage,
 }) => {
   return (
-    <div className='w-full mb-3'>
+    <div className='mr-4 max-w-sm '>
       <label
         className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'
         htmlFor={'id-' + name}
@@ -20,7 +20,7 @@ const Select = ({
         {label}
       </label>
       <select
-        className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
+        className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white focus:border-gray-500 '
         id={'id-' + name}
         placeholder={placeholder}
         onChange={onChange}
@@ -42,7 +42,7 @@ const Select = ({
         <p className='text-red-500 text-xs italic'>{errorMessage}</p>
       )}
       {helpText && (
-        <p className='text-gray-600 text-xs italic mb-4'>{helpText} </p>
+        <p className='text-gray-600 text-xs italic'>{helpText} </p>
       )}
     </div>
   )

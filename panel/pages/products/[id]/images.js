@@ -32,7 +32,8 @@ const Images = () => {
         images
       }
 }`)
-  const [deleteImageData, deleteProductImage] = useMutation(DELETE_PRODUCT_IMAGE)
+  const [deleteImageData, deleteProductImage] =
+    useMutation(DELETE_PRODUCT_IMAGE)
   const [uploadData, uploadProductImage] = useUpload(UPLOAD_PRODUCT_IMAGE)
   const form = useFormik({
     initialValues: {
@@ -52,7 +53,7 @@ const Images = () => {
     },
   })
   const removeProductImage = (id, url) => async () => {
-    await deleteProductImage({ id , url})
+    await deleteProductImage({ id, url })
     mutate()
   }
   return (
@@ -81,31 +82,43 @@ const Images = () => {
             </p>
           )}
           <section className='overflow-hidden text-gray-70 mt-5'>
-        <div>
-          <div className='flex flex-wrap  w-full -m-1 md:-m-2 '>
-            {data?.getProductById?.images?.length === 0 &&
-            <Alert>
-              Nenhuma imagem neste produto
-            </Alert>}
-            {data?.getProductById?.images?.map((image,index) => (
-              <div className='relative flex flex-wrap  bg-slate-400  px-1 py-2 mx-1 my-3 rounded justify-center hover:bg-slate-300' key = {image + index}>
-                <div className='w-full md:p-2 flex items-center justify-center'>
-                  <img src={image} alt={data.getProductById.name} style ={{maxHeight:'200px'}}/>
-                </div>
-                <button 
-                onClick = {removeProductImage(router.query.id, image)}
-                className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400' 
-                style ={{position: 'absolute', right: '5px', top: '10px', maxHeight:'35px'}}> 
-                X
-                </button>
+            <div>
+              <div className='flex flex-wrap  w-full -m-1 md:-m-2 '>
+                {(data?.getProductById?.images === null ||
+                  data?.getProductById?.images?.length === 0) && (
+                  <Alert>Nenhuma imagem neste produto</Alert>
+                )}
+                {data?.getProductById?.images?.map((image, index) => (
+                  <div
+                    className='relative flex flex-wrap  bg-slate-400  px-1 py-2 mx-1 my-3 rounded justify-center hover:bg-slate-300'
+                    key={image + index}
+                  >
+                    <div className='w-full md:p-2 flex items-center justify-center'>
+                      <img
+                        src={image}
+                        alt={data.getProductById.name}
+                        style={{ maxHeight: '200px' }}
+                      />
+                    </div>
+                    <button
+                      onClick={removeProductImage(router.query.id, image)}
+                      className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400'
+                      style={{
+                        position: 'absolute',
+                        right: '5px',
+                        top: '10px',
+                        maxHeight: '35px',
+                      }}
+                    >
+                      X
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
         </div>
       </div>
-      
     </Layout>
   )
 }
