@@ -12,45 +12,50 @@ export const CartProvider = ({ children }) => {
   }, [])
 
   const addToCart = (product, selectedVariation) => {
-    const variation = selectedVariation[0]
-    const variationId= variation.optionName1 + '-'+ variation.optionName2
+    const variationId = product.name + selectedVariation.color.colorName + selectedVariation.sku
     setItems(current => {
-        const newCart = {...current}
-        if(current[product.id]){
-            if(current[product.id].qtd[variationId]){
-                current[product.id].qtd[variationId].qtd++
-            }else{
-                current[product.id].qtd = {
-                    ...current[product.id].qtd,
-                    [variationId]:{
-                        variation,
-                        qtd: 1
-                    }
-                }
-            }
-        }else{
-            newCart[product.id] = {
-                  product,
-                  qtd: {
-                    [variationId]: {
-                      variation,
-                      qtd: 1,
-                    },
-                  },               
-              }
+      const newCart = { ...current }
+      if (current[variationId]) {
+        current[variationId].qtd++
+      } else {
+        newCart[variationId] = {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          description: product.description,
+          images: product.images,
+          sizeType: product.sizeType,
+          variation: selectedVariation,
+          qtd: 1,
         }
-       
+      }
+
       localStorage.setItem('cart', JSON.stringify(newCart))
       return newCart
     })
   }
-  const removeFromCart = product => {
-    const id = product.id
-    setItems(current => {
-      const { [id]: etc, ...newCart } = current
+  const removeFromCart = (product, selectedVariation) => {
+    const variationId = product.name + selectedVariation.color.colorName + selectedVariation.sku
+    const variation = items[variationId]
+    if(variation){
+    if(variation.qtd > 0){
+      setItems(current => {
+        const newCart = {...current}
+        newCart[variationId].qtd--
+        localStorage.setItem('cart', JSON.stringify(newCart))
+        if(newCart[variationId].qtd === 0){
+          const {[variationId] : etc, ...newCart2} = newCart
+          localStorage.setItem('cart', JSON.stringify(newCart2))
+          return newCart2
+        }
+        return newCart
+      })
+    }}
+    /*
+      const { [variationId]: selectedVariation, ...newCart } = current
       localStorage.setItem('cart', JSON.stringify(newCart))
-      return newCart
-    })
+      return newCart*/
+    
   }
   const cartSize = Object.keys(items).length
   return (
