@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState}from 'react'
 import Layout from '../../components/Layout'
 import Title from '../../components/Title'
 import { useMutation, fetcher } from '../../lib/graphql'
@@ -8,6 +8,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import * as Yup from 'yup'
 import Select from '../../components/Select'
+import Modal from '../../components/Modal'
 const roleOptions = [
   {id: 'ADMIN', label: 'Administrador'},
   {id: 'USER', label: 'Usuario'}
@@ -35,7 +36,6 @@ const UserSchema = Yup.object().shape({
     .min(3, 'Por favor, informe uma senha com pelo menos 3 caracteres')
     .required('Por favor, informe uma senha'),
   role: Yup.string()
-    .min(3, 'Por favor, informe uma role com pelo menos 3 caracteres')
     .required('Por favor, informe uma role'),
   email: Yup.string()
     .min(3, 'Por favor, informe um email com pelo menos 3 caracteres')
@@ -60,9 +60,12 @@ const UserSchema = Yup.object().shape({
 })
 const CreateUser = () => {
   const [data, createUser] = useMutation(CREATE_USER)
+  const [modalVisible, setModalVisible] = useState(false)
   const router = useRouter()
   const form = useFormik({
-    validateOnChange: false,
+    validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       name: '',
       email: '',
@@ -77,6 +80,11 @@ const CreateUser = () => {
       }
     },
   })
+  const checkForErrors = async() =>{
+    if(JSON.stringify(form.errors) === '{}'){
+      setModalVisible(true)
+    }
+  }
   return (
     <Layout>
       <Title>Criar novo usuario</Title>
@@ -95,6 +103,7 @@ const CreateUser = () => {
                   value={form.values.name}
                   name='name'
                   errorMessage={form.errors.name}
+                  onBlur={form.handleBlur}
                 />
               </div>
 
@@ -106,6 +115,7 @@ const CreateUser = () => {
                   value={form.values.email}
                   name='email'
                   errorMessage={form.errors.email}
+                  onBlur={form.handleBlur}
                 />
               </div>
 
@@ -117,6 +127,7 @@ const CreateUser = () => {
                   value={form.values.password}
                   name='password'
                   errorMessage={form.errors.password}
+                  onBlur={form.handleBlur}
                 />
               </div>
 
@@ -128,8 +139,16 @@ const CreateUser = () => {
                   value={form.values.role}
                   options={roleOptions}
                   errorMessage={form.errors.role}
+                  onBlur={form.handleBlur}
                 />
-                <Button type='submit'>Criar usuario</Button>
+               <Button type='button' onClick={checkForErrors}>
+                Criar Usuario
+              </Button>
+              <Modal
+                type={'create'}
+                visible={modalVisible}
+                closeFunction={() => setModalVisible(false)}
+              />
               </div>
             </form>
             {data && !!data.errors && (

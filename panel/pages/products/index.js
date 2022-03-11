@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState} from 'react'
 import Layout from '../../components/Layout'
 import Title from '../../components/Title'
 import Table from '../../components/Table'
@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '../../lib/graphql'
 import Link from 'next/link'
 import Button from '../../components/Button'
 import Alert from '../../components/Alert'
+import Modal from '../../components/Modal'
 
 const DELETE_PRODUCT = `
   mutation deleteProduct($id: String!) {
@@ -33,10 +34,17 @@ const GET_ALL_PRODUCTS = `
 const Products = () => {
   const { data, error, mutate } = useQuery(GET_ALL_PRODUCTS)
   const [deleteData, deleteProduct] = useMutation(DELETE_PRODUCT)
-
-  const remove = id => async () => {
-    await deleteProduct({ id })
+  const [modalVisible, setModalVisible] = useState(false)
+  const [itemSelected, setItemSelected] = useState('')
+ 
+  const openModal = id => async () => {
+    setModalVisible(true)
+    setItemSelected({id})
+  }
+  const remove = async() =>{
+    await deleteProduct(itemSelected)
     mutate()
+    setModalVisible(false)
   }
   return (
     <Layout>
@@ -117,7 +125,7 @@ const Products = () => {
                         {' | '}
                         <a
                           href='#'
-                          onClick={remove(item.id)}
+                          onClick={openModal(item.id)}
                           className='text-red-900 font-medium hover:text-red-400'
                         >
                           Remover
@@ -127,6 +135,7 @@ const Products = () => {
                   ))}
                 </Table.Body>
               </Table>
+              <Modal type = {'remove'} itemId = {itemSelected} visible = {modalVisible} confirmFunction={remove} closeFunction = {() => setModalVisible(false)}/>
             </div>
           )}
         </div>

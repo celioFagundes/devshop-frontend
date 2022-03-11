@@ -50,6 +50,8 @@ const CreateCategory = () => {
   const router = useRouter()
   const form = useFormik({
     validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       name: '',
       slug: '',
@@ -63,14 +65,10 @@ const CreateCategory = () => {
     },
   })
   const checkForErrors = async() =>{
-    const hasErrors = await form.validateForm()
-    if(hasErrors === {}){
+    if(JSON.stringify(form.errors) === '{}'){
       setModalVisible(true)
-      console.log('passou')
     }
-    console.log(hasErrors)
   }
-  console.log()
   return (
     <Layout>
       <Title>Gerenciar Categorias</Title>
@@ -88,6 +86,7 @@ const CreateCategory = () => {
                 value={form.values.name}
                 name='name'
                 errorMessage={form.errors.name}
+                onBlur={form.handleBlur}
               /></div>
               
 
@@ -98,10 +97,11 @@ const CreateCategory = () => {
                 value={form.values.slug}
                 name='slug'
                 errorMessage={form.errors.slug}
+                onBlur={form.handleBlur}
                 helpText='Slug é utilizado para criar URLs amigaveis'
               />
               <Button type='button' onClick={checkForErrors}>Criar categoria</Button> 
-              <Modal type = {'save'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
+              <Modal type = {'create'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
             </form>
             {data && !!data.errors && (
               <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

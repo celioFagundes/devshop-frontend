@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, {  useState } from 'react'
 import Layout from '../../../components/Layout'
 import Title from '../../../components/Title'
 import { useMutation, useQuery, fetcher } from '../../../lib/graphql'
@@ -7,6 +7,7 @@ import { useFormik } from 'formik'
 import Input from '../../../components/Input'
 import Button from '../../../components/Button'
 import * as Yup from 'yup'
+import Modal from '../../../components/Modal'
 
 let id = ''
 const UPDATE_USER = `
@@ -24,6 +25,7 @@ const UserSchema = Yup.object().shape({
 })
 const AlterarSenha = () => {
   const router = useRouter()
+  const [modalVisible, setModalVisible] = useState(false)
   id = router.query.id
   const { data } = useQuery(`
   query{
@@ -33,6 +35,9 @@ const AlterarSenha = () => {
 }`)
   const [updatedData, updateUser] = useMutation(UPDATE_USER)
   const form = useFormik({
+    validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       password: ''
     },
@@ -49,6 +54,11 @@ const AlterarSenha = () => {
       }
     },
   })
+  const checkForErrors = async() =>{
+    if(JSON.stringify(form.errors) === '{}'){
+      setModalVisible(true)
+    }
+  }
   return (
     <Layout>
       <Title>
@@ -65,11 +75,13 @@ const AlterarSenha = () => {
               label='Senha do usuario'
               placeholder='Preencha a senha do usuario'
               onChange={form.handleChange}
+              onBlur={form.handleBlur}
               value={form.values.password}
               name='password'
               errorMessage={form.errors.password}
             />
-            <Button type='submit'>Salvar</Button>
+            <Button type='button' onClick={checkForErrors}>Salvar alterações</Button> 
+              <Modal type = {'edit'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
           </form>
           {updatedData && !!updatedData.errors && (
             <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

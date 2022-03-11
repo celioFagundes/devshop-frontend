@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState} from 'react'
 import Layout from '../../components/Layout'
 import Title from '../../components/Title'
 import Table from '../../components/Table'
@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '../../lib/graphql'
 import Link from 'next/link'
 import Button from '../../components/Button'
 import Alert from '../../components/Alert'
+import Modal from '../../components/Modal'
 
 const DELETE_BRAND = `
   mutation deleteBrand($id: String!) {
@@ -31,10 +32,16 @@ const Brands = () => {
   const { data, error, mutate } = useQuery(GET_ALL_BRANDS)
   const [deleteData, deleteBrand] = useMutation(DELETE_BRAND)
   const [deleteBrandLogoData, deleteBrandLogo] = useMutation(REMOVE_BRAND_LOGO)
-
-  const remove = id => async () => {
-    await deleteBrand({ id })
+  const [modalVisible, setModalVisible] = useState(false)
+  const [itemSelected, setItemSelected] = useState('')
+  const openModal = id => async () => {
+    setModalVisible(true)
+    setItemSelected({id})
+  }
+  const remove = async() =>{
+    await deleteBrand(itemSelected)
     mutate()
+    setModalVisible(false)
   }
   const removeBrandLogo = id => async () => {
     await deleteBrandLogo({ id })
@@ -127,7 +134,7 @@ const Brands = () => {
                           )}
                           <a
                             href='#'
-                            onClick={remove(item.id)}
+                            onClick={openModal(item.id)}
                             className='text-red-900 font-medium hover:text-red-400 '
                           >
                             Remover
@@ -137,6 +144,7 @@ const Brands = () => {
                     ))}
                 </Table.Body>
               </Table>
+              <Modal type = {'remove'} itemId = {itemSelected} visible = {modalVisible} confirmFunction={remove} closeFunction = {() => setModalVisible(false)}/>
             </div>
           )}
         </div>

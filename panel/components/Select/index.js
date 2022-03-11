@@ -5,6 +5,7 @@ const Select = ({
   label = '',
   value,
   onChange,
+  onBlur,
   name = '',
   helpText,
   oldValue = '',
@@ -24,6 +25,7 @@ const Select = ({
         id={'id-' + name}
         placeholder={placeholder}
         onChange={onChange}
+        onBlur = {onBlur}
         name={name}
         value={oldValue !=='' ? oldValue : value}
       >

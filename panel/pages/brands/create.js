@@ -1,4 +1,4 @@
-import React from 'react'
+import React ,{useState} from 'react'
 import Layout from '../../components/Layout'
 import Title from '../../components/Title'
 import { useMutation, fetcher } from '../../lib/graphql'
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import * as Yup from 'yup'
+import Modal from '../../components/Modal'
 
 const CREATE_BRAND = `
   mutation createBrand($name: String!, $slug: String!) {
@@ -46,9 +47,12 @@ const BrandSchema = Yup.object().shape({
 })
 const CreateBrand = () => {
   const [data, createBrand] = useMutation(CREATE_BRAND)
+  const [modalVisible, setModalVisible] = useState(false)
   const router = useRouter()
   const form = useFormik({
     validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       name: '',
       slug: '',
@@ -61,6 +65,12 @@ const CreateBrand = () => {
       }
     },
   })
+  
+  const checkForErrors = async() =>{
+    if(JSON.stringify(form.errors) === '{}'){
+      setModalVisible(true)
+    }
+  }
   return (
     <Layout>
       <Title>Criar uma nova marca</Title>
@@ -78,6 +88,7 @@ const CreateBrand = () => {
                 value={form.values.name}
                 name='name'
                 errorMessage={form.errors.name}
+                onBlur={form.handleBlur}
               />
 
               <Input
@@ -87,10 +98,18 @@ const CreateBrand = () => {
                 value={form.values.slug}
                 name='slug'
                 errorMessage={form.errors.slug}
+                onBlur={form.handleBlur}
                 helpText='Slug é utilizado para criar URLs amigaveis'
               />
 
-              <Button type='submit'>Criar marca</Button>
+              <Button type='button' onClick={checkForErrors}>
+                Criar marca
+              </Button>
+              <Modal
+                type={'create'}
+                visible={modalVisible}
+                closeFunction={() => setModalVisible(false)}
+              />
             </form>
             {data && !!data.errors && (
               <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

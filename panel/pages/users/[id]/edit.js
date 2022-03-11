@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect , useState} from 'react'
 import Layout from '../../../components/Layout'
 import Title from '../../../components/Title'
 import { useMutation, useQuery, fetcher } from '../../../lib/graphql'
@@ -8,6 +8,7 @@ import Input from '../../../components/Input'
 import Button from '../../../components/Button'
 import * as Yup from 'yup'
 import Select from '../../../components/Select'
+import Modal from '../../../components/Modal'
 const roleOptions = [
   {id: 'ADMIN', label: 'Administrador'},
   {id: 'USER', label: 'Usuario'}
@@ -59,6 +60,7 @@ const UserSchema = Yup.object().shape({
 })
 const EditUser = () => {
   const router = useRouter()
+  const [modalVisible, setModalVisible] = useState(false)
   id = router.query.id
   const { data } = useQuery(`
   query{
@@ -71,6 +73,8 @@ const EditUser = () => {
   const [updatedData, updateUser] = useMutation(UPDATE_USER)
   const form = useFormik({
     validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       name: '',
       email: '',
@@ -96,6 +100,11 @@ const EditUser = () => {
       
     }
   }, [data])
+  const checkForErrors = async() =>{
+    if(JSON.stringify(form.errors) === '{}'){
+      setModalVisible(true)
+    }
+  }
   return (
     <Layout>
       <Title>Editar usuario</Title>
@@ -110,6 +119,7 @@ const EditUser = () => {
                   label='Nome do usuario'
                   placeholder='Preencha o nome do usuario'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   value={form.values.name}
                   name='name'
                   errorMessage={form.errors.name}
@@ -121,6 +131,7 @@ const EditUser = () => {
                   label='Email do usuario'
                   placeholder='Preencha o email do usuario'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   value={form.values.email}
                   name='email'
                   errorMessage={form.errors.email}
@@ -131,6 +142,7 @@ const EditUser = () => {
               <Select
                   label= 'Role do usuario'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='role'
                   value={form.values.role}
                   options={roleOptions}
@@ -138,7 +150,8 @@ const EditUser = () => {
                 />
                 
               </div>
-            <Button type='submit'>Editar usuario</Button>
+              <Button type='button' onClick={checkForErrors}>Salvar alterações</Button> 
+              <Modal type = {'edit'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
           </form>
           {updatedData && !!updatedData.errors && (
             <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

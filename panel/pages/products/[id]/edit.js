@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../../components/Layout'
 import Title from '../../../components/Title'
 import { useMutation, useQuery, fetcher } from '../../../lib/graphql'
@@ -8,6 +8,7 @@ import Input from '../../../components/Input'
 import Button from '../../../components/Button'
 import Select from '../../../components/Select'
 import * as Yup from 'yup'
+import Modal from '../../../components/Modal'
 const validaSizeTypes = [
   { label: 'Roupas', id: 'clothes' },
   { label: 'Calçados', id: 'shoes' },
@@ -117,6 +118,7 @@ const ProductSchema = Yup.object().shape({
 })
 const EditProduct = () => {
   const router = useRouter()
+  const [modalVisible, setModalVisible] = useState(false)
   id = router.query.id
   const { data: categories, error } = useQuery(GET_ALL_CATEGORIES)
   const { data: brands } = useQuery(GET_ALL_BRANDS)
@@ -151,7 +153,9 @@ const EditProduct = () => {
 }`)
   const [updatedData, updateProduct] = useMutation(UPDATE_PRODUCT)
   const form = useFormik({
-    validateOnChange: false,
+    validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       name: '',
       slug: '',
@@ -223,7 +227,11 @@ const EditProduct = () => {
       }
     })
   }
-
+  const checkForErrors = async() =>{
+    if(JSON.stringify(form.errors) === '{}'){
+      setModalVisible(true)
+    }
+  }
   return (
     <Layout>
       <Title>Editar Produto</Title>
@@ -240,6 +248,7 @@ const EditProduct = () => {
                   label='Nome do produto'
                   placeholder='Preencha o nome do produto'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   value={form.values.name}
                   name='name'
                   errorMessage={form.errors.name}
@@ -249,6 +258,7 @@ const EditProduct = () => {
                     label='Slug do produto'
                     placeholder='Preencha o slug do produto'
                     onChange={form.handleChange}
+                    onBlur={form.handleBlur}
                     value={form.values.slug}
                     name='slug'
                     errorMessage={form.errors.slug}
@@ -261,6 +271,7 @@ const EditProduct = () => {
                   label='Descrição do produto'
                   placeholder='Preencha a descrição do produto'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   value={form.values.description}
                   name='description'
                   errorMessage={form.errors.description}
@@ -270,6 +281,7 @@ const EditProduct = () => {
                 <Select
                   label={'Selecione a categoria do produto'}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='category'
                   value={form.values.category}
                   options={categoriesOptions}
@@ -278,6 +290,7 @@ const EditProduct = () => {
                 <Select
                   label={'Selecione a marca do produto'}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='brand'
                   value={form.values.brand}
                   options={brandsOptions}
@@ -286,6 +299,7 @@ const EditProduct = () => {
                 <Select
                   label={'Selecione o tipo de medida do  produto'}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='sizeType'
                   value={form.values.sizeType}
                   options={validaSizeTypes}
@@ -330,6 +344,7 @@ const EditProduct = () => {
                                   label='Nome e codigo da Cor'
                                   placeholder='Nome da cor'
                                   onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
                                   value={
                                     form.values.variations[index].color
                                       .colorName
@@ -352,6 +367,7 @@ const EditProduct = () => {
                                   }
                                   placeholder='Preencha a cor'
                                   onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
                                   value={
                                     form.values.variations[index].color
                                       .colorCode
@@ -364,6 +380,7 @@ const EditProduct = () => {
                                 label='Tamanho'
                                 placeholder='Preencha o tamanho'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={form.values.variations[index].size}
                                 name={`variations.${index}.size`}
                                 errorMessage={
@@ -386,6 +403,7 @@ const EditProduct = () => {
                                       ].voltage.indexOf('120V') >= 0
                                     }
                                     onChange={form.handleChange}
+                                    onBlur={form.handleBlur}
                                     name={`variations.${index}.voltage`}
                                     value='120V'
                                   />
@@ -398,6 +416,7 @@ const EditProduct = () => {
                                       ].voltage.indexOf('220V') >= 0
                                     }
                                     onChange={form.handleChange}
+                                    onBlur={form.handleBlur}
                                     name={`variations.${index}.voltage`}
                                     value='220V'
                                   />
@@ -410,6 +429,7 @@ const EditProduct = () => {
                                       ].voltage.indexOf('Bivolt') >= 0
                                     }
                                     onChange={form.handleChange}
+                                    onBlur={form.handleBlur}
                                     name={`variations.${index}.voltage`}
                                     value='Bivolt'
                                   />
@@ -420,6 +440,7 @@ const EditProduct = () => {
                                   label='SKU'
                                   placeholder='Preencha o SKU da variação'
                                   onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
                                   value={form.values.variations[index].sku}
                                   name={`variations.${index}.sku`}
                                   errorMessage={
@@ -433,6 +454,7 @@ const EditProduct = () => {
                                   label='Preço'
                                   placeholder='Preencha o preço da variação'
                                   onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
                                   value={form.values.variations[index].price}
                                   name={`variations.${index}.price`}
                                   errorMessage={
@@ -446,6 +468,7 @@ const EditProduct = () => {
                                   label='Peso'
                                   placeholder='Preencha o peso da variação'
                                   onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
                                   value={form.values.variations[index].weight}
                                   name={`variations.${index}.weight`}
                                   errorMessage={
@@ -459,6 +482,7 @@ const EditProduct = () => {
                                   label='Estoque'
                                   placeholder='Preencha o estoque da variação'
                                   onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
                                   value={form.values.variations[index].stock}
                                   name={`variations.${index}.stock`}
                                   errorMessage={
@@ -484,7 +508,8 @@ const EditProduct = () => {
                   }}
                 />
               </FormikProvider>
-              <Button type='submit'>Salvar alterações</Button>
+              <Button type='button' onClick={checkForErrors}>Salvar alterações</Button> 
+              <Modal type = {'edit'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
             </form>
 
             {data && !!data.errors && (

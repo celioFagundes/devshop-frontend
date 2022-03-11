@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState} from 'react'
 import Layout from '../../../components/Layout'
 import Title from '../../../components/Title'
 import Table from '../../../components/Table'
@@ -8,6 +8,7 @@ import Alert from '../../../components/Alert'
 import { useRouter } from 'next/router'
 import { formatDistance } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-Br'
+import Modal from '../../../components/Modal'
 
 const INVALIDADE_SESSION = `
   mutation invalidateUserSession($id: String!) {
@@ -25,11 +26,17 @@ const Sessions = () => {
           active
         }
       }`)
-  const [deleteData, deleteUser] = useMutation(INVALIDADE_SESSION)
-
-  const remove = id => async () => {
-    await deleteUser({ id })
+  const [deleteData, invalidateUser] = useMutation(INVALIDADE_SESSION)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [itemSelected, setItemSelected] = useState('')
+  const openModal = id => async () => {
+    setModalVisible(true)
+    setItemSelected({id})
+  }
+  const invalidate = async() =>{
+    await invalidateUser(itemSelected)
     mutate()
+    setModalVisible(false)
   }
   return (
     <Layout>
@@ -44,7 +51,7 @@ const Sessions = () => {
             <Alert>Nenhuma sessão encontrada</Alert>
           )}
           {data && data.panelGetAllUserSessions.length > 0 && (
-            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200'>
+            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg '>
               <Table>
                 <Table.Head>
                   <Table.Th>Sessões</Table.Th>
@@ -84,8 +91,8 @@ const Sessions = () => {
                           {item.active ? (
                             <a
                               href='#'
-                              onClick={remove(item.id)}
-                              className='text-red-600 hover:text-indigo-900 ml-2'
+                              onClick={openModal(item.id)}
+                              className='text-red-800 font-medium hover:text-red-400 ml-2'
                             >
                               Invalidar
                             </a>
@@ -99,6 +106,7 @@ const Sessions = () => {
                     ))}
                 </Table.Body>
               </Table>
+              <Modal type = {'invalidate'} itemId = {itemSelected} visible = {modalVisible} confirmFunction={invalidate} closeFunction = {() => setModalVisible(false)}/>
             </div>
           )}
         </div>

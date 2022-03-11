@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Layout from '../../components/Layout'
 import Title from '../../components/Title'
 import Table from '../../components/Table'
@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '../../lib/graphql'
 import Link from 'next/link'
 import Button from '../../components/Button'
 import Alert from '../../components/Alert'
+import Modal from '../../components/Modal'
 
 const DELETE_USERS = `
   mutation deleteUser($id: String!) {
@@ -25,9 +26,16 @@ const Users = () => {
   const { data, error, mutate } = useQuery(GET_ALL_USERS)
   const [deleteData, deleteUser] = useMutation(DELETE_USERS)
 
-  const remove = id => async () => {
-    await deleteUser({ id })
+  const [modalVisible, setModalVisible] = useState(false)
+  const [itemSelected, setItemSelected] = useState('')
+  const openModal = id => async () => {
+    setModalVisible(true)
+    setItemSelected({id})
+  }
+  const remove = async() =>{
+    await deleteUser(itemSelected)
     mutate()
+    setModalVisible(false)
   }
   return (
     <Layout>
@@ -44,7 +52,7 @@ const Users = () => {
             <Alert>Nenhum usuario encontrado</Alert>
           )}
           {data && data.panelGetAllUsers.length > 0 && (
-            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200'>
+            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg '>
               <Table>
                 <Table.Head>
                   <Table.Th>User</Table.Th>
@@ -86,7 +94,7 @@ const Users = () => {
                         {' | '}
                         <a
                           href='#'
-                          onClick={remove(item.id)}
+                          onClick={openModal(item.id)}
                           className='text-red-900 font-medium hover:text-red-400'
                         >
                           Remover
@@ -96,6 +104,7 @@ const Users = () => {
                   ))}
                 </Table.Body>
               </Table>
+              <Modal type = {'remove'} itemId = {itemSelected} visible = {modalVisible} confirmFunction={remove} closeFunction = {() => setModalVisible(false)}/>
             </div>
           )}
         </div>

@@ -9,6 +9,7 @@ const Input = ({
   helpText,
   errorMessage = '',
   disabled,
+  onBlur
 }) => {
   return (
     <div className='mr-2 max-w-sm'>
@@ -19,6 +20,7 @@ const Input = ({
         {label}
       </label>
       <input
+      onBlur = {onBlur}
         disabled={disabled}
         className='appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-2 px-3 mb-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
         type={type}

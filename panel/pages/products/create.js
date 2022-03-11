@@ -8,6 +8,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import Select from '../../components/Select'
 import * as Yup from 'yup'
+import Modal from '../../components/Modal'
 
 const validaSizeTypes = [
   { label: 'Roupas', id: 'clothes' },
@@ -101,10 +102,13 @@ const ProductSchema = Yup.object().shape({
 const CreateProduct = () => {
   const { data: categories } = useQuery(GET_ALL_CATEGORIES)
   const { data: brands } = useQuery(GET_ALL_BRANDS)
+  const [modalVisible, setModalVisible] = useState(false)
   const [data, createProduct] = useMutation(CREATE_PRODUCT)
   const router = useRouter()
   const form = useFormik({
     validateOnChange:false,
+    validateOnMount:true,
+    validateOnBlur:true,
     initialValues: {
       name: '',
       slug: '',
@@ -162,6 +166,11 @@ const CreateProduct = () => {
       }
     })
   }
+  const checkForErrors = async() =>{
+    if(JSON.stringify(form.errors) === '{}'){
+      setModalVisible(true)
+    }
+  }
   return (
     <Layout>
       <Title>Criar Produtos</Title>
@@ -180,11 +189,13 @@ const CreateProduct = () => {
                   value={form.values.name}
                   name='name'
                   errorMessage={form.errors.name}
+                  onBlur={form.handleBlur}
                 />
                 <Input
                   label='Slug do produto'
                   placeholder='Preencha o slug do produto'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   value={form.values.slug}
                   name='slug'
                   errorMessage={form.errors.slug}
@@ -196,6 +207,7 @@ const CreateProduct = () => {
                   label='Descrição do produto'
                   placeholder='Preencha a descrição do produto'
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   value={form.values.description}
                   name='description'
                   errorMessage={form.errors.description}
@@ -205,6 +217,7 @@ const CreateProduct = () => {
                 <Select
                   label={'Selecione a categoria do produto'}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='category'
                   value={form.values.category}
                   options={categoriesOptions}
@@ -213,6 +226,7 @@ const CreateProduct = () => {
                 <Select
                   label={'Selecione a marca do produto'}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='brand'
                   value={form.values.brand}
                   options={brandsOptions}
@@ -221,6 +235,7 @@ const CreateProduct = () => {
                 <Select
                   label={'Selecione o tipo de medida do  produto'}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                   name='sizeType'
                   value={form.values.sizeType}
                   options={validaSizeTypes}
@@ -265,6 +280,7 @@ const CreateProduct = () => {
                                 label='Nome e codigo da Cor'
                                 placeholder='Nome da cor'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={
                                   form.values.variations[index].color.colorName
                                 }
@@ -278,6 +294,7 @@ const CreateProduct = () => {
                                 }
                                 placeholder='Preencha a cor'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={
                                   form.values.variations[index].color.colorCode
                                 }
@@ -290,6 +307,7 @@ const CreateProduct = () => {
                               label='Tamanho'
                               placeholder='Preencha o tamanho'
                               onChange={form.handleChange}
+                              onBlur={form.handleBlur}
                               value={form.values.variations[index].size}
                               name={`variations.${index}.size`}
                               errorMessage = {form.errors?.variations && form.errors.variations[index]?.size && form.errors.variations[index].size}
@@ -303,6 +321,7 @@ const CreateProduct = () => {
                                   label={'120V'}
                                   type='checkbox'
                                   onChange={form.handleChange}
+                                  
                                   name={`variations.${index}.voltage`}
                                   value='120V'
                                 />
@@ -310,6 +329,7 @@ const CreateProduct = () => {
                                   label={'220V'}
                                   type='checkbox'
                                   onChange={form.handleChange}
+                                  
                                   name={`variations.${index}.voltage`}
                                   value='220V'
                                 />
@@ -327,6 +347,7 @@ const CreateProduct = () => {
                                 label='SKU'
                                 placeholder='Preencha o SKU da variação'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={form.values.variations[index].sku}
                                 name={`variations.${index}.sku`}
                                 errorMessage = {form.errors?.variations && form.errors.variations[index]?.sku && form.errors.variations[index].sku}
@@ -336,6 +357,7 @@ const CreateProduct = () => {
                                 label='Preço'
                                 placeholder='Preencha o preço da variação'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={form.values.variations[index].price}
                                 name={`variations.${index}.price`}
                                 errorMessage = {form.errors?.variations && form.errors.variations[index]?.price && form.errors.variations[index].price}
@@ -345,6 +367,7 @@ const CreateProduct = () => {
                                 label='Peso'
                                 placeholder='Preencha o peso da variação'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={form.values.variations[index].weight}
                                 name={`variations.${index}.weight`}
                                 errorMessage = {form.errors?.variations && form.errors.variations[index]?.weight && form.errors.variations[index].weight}
@@ -354,6 +377,7 @@ const CreateProduct = () => {
                                 label='Estoque'
                                 placeholder='Preencha o estoque da variação'
                                 onChange={form.handleChange}
+                                onBlur={form.handleBlur}
                                 value={form.values.variations[index].stock}
                                 name={`variations.${index}.stock`}
                                 errorMessage = {form.errors?.variations && form.errors.variations[index]?.stock && form.errors.variations[index].stock}
@@ -374,7 +398,8 @@ const CreateProduct = () => {
                   }}
                 />
               </FormikProvider>
-              <Button type='submit'>Criar produto</Button>
+              <Button type='button' onClick={checkForErrors}>Criar produto</Button> 
+              <Modal type = {'create'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
             </form>
 
             {data && !!data.errors && (
