@@ -6,7 +6,7 @@ const Button = ({ children, type = 'text' , onClick}) => {
     <button
       type={type}
       onClick ={onClick}
-      className='bg-sky-700 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'
+      className='bg-white my-2 max-w-xs hover:bg-slate-200 text-gray-700 font-bold py-2 px-4 rounded'
     >
       {children}
     </button>
@@ -15,7 +15,7 @@ const Button = ({ children, type = 'text' , onClick}) => {
 const ButtonLink = ({ href, children }) => {
   return (
     <Link href={href}>
-      <a className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'>
+      <a className='bg-white  hover:bg-slate-200 text-gray-700 font-bold py-2 px-4 border border-white rounded'>
         {children}
       </a>
     </Link>
@@ -25,7 +25,7 @@ const ButtonLinkOutline = ({ href, children }) => {
   return (
     <Link href={href}>
       <a
-        className='bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded
+        className='bg-transparent hover:bg-white text-white font-semibold hover:text-gray-800 py-2 px-4 border border-white hover:border-transparent rounded
 '
       >
         {children}

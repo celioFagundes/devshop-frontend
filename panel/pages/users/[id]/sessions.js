@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import { formatDistance } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-Br'
 
-const DELETE_USERS = `
+const INVALIDADE_SESSION = `
   mutation invalidateUserSession($id: String!) {
     panelInvalidateUserSession(id : $id)
 }`
@@ -25,7 +25,7 @@ const Sessions = () => {
           active
         }
       }`)
-  const [deleteData, deleteUser] = useMutation(DELETE_USERS)
+  const [deleteData, deleteUser] = useMutation(INVALIDADE_SESSION)
 
   const remove = id => async () => {
     await deleteUser({ id })

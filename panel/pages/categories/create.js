@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState} from 'react'
 import Layout from '../../components/Layout'
 import Title from '../../components/Title'
 import { useMutation, fetcher } from '../../lib/graphql'
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import * as Yup from 'yup'
+import Modal from '../../components/Modal'
 const CREATE_CATEGORY = `
   mutation createCategory($name: String!, $slug: String!) {
     panelCreateCategory (input: {
@@ -45,8 +46,10 @@ const CategorySchema = Yup.object().shape({
 })
 const CreateCategory = () => {
   const [data, createCategory] = useMutation(CREATE_CATEGORY)
+  const [modalVisible, setModalVisible] = useState(false)
   const router = useRouter()
   const form = useFormik({
+    validateOnChange:false,
     initialValues: {
       name: '',
       slug: '',
@@ -59,6 +62,15 @@ const CreateCategory = () => {
       }
     },
   })
+  const checkForErrors = async() =>{
+    const hasErrors = await form.validateForm()
+    if(hasErrors === {}){
+      setModalVisible(true)
+      console.log('passou')
+    }
+    console.log(hasErrors)
+  }
+  console.log()
   return (
     <Layout>
       <Title>Gerenciar Categorias</Title>
@@ -67,16 +79,17 @@ const CreateCategory = () => {
       </div>
       <div className='flex flex-col mt-5'>
         <div className='-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
             <form onSubmit={form.handleSubmit}>
-              <Input
+              <div className='mb-3'><Input
                 label='Nome da categoria'
                 placeholder='Preencha o nome da categoria'
                 onChange={form.handleChange}
                 value={form.values.name}
                 name='name'
                 errorMessage={form.errors.name}
-              />
+              /></div>
+              
 
               <Input
                 label='Slug da categoria'
@@ -87,8 +100,8 @@ const CreateCategory = () => {
                 errorMessage={form.errors.slug}
                 helpText='Slug é utilizado para criar URLs amigaveis'
               />
-
-              <Button type='submit'>Criar categoria</Button>
+              <Button type='button' onClick={checkForErrors}>Criar categoria</Button> 
+              <Modal type = {'save'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
             </form>
             {data && !!data.errors && (
               <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

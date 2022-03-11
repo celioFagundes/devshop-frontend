@@ -23,6 +23,10 @@ const GET_ALL_PRODUCTS = `
       id
       name
     }
+    brand{
+      id
+      name
+    }
   }
 }`
 
@@ -47,12 +51,13 @@ const Products = () => {
             <Alert>Nenhuma produto encontrado</Alert>
           )}
           {data && data.getAllProducts.length > 0 && (
-            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200'>
+            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg '>
               <Table>
                 <Table.Head>
                   <Table.Th>Produtos</Table.Th>
                   <Table.Th>Slug</Table.Th>
                   <Table.Th>Categoria</Table.Th>
+                  <Table.Th>Marca</Table.Th>
                   <Table.Th>Ações</Table.Th>
                 </Table.Head>
                 <Table.Body>
@@ -88,15 +93,24 @@ const Products = () => {
                           </div>
                         </div>
                       </Table.Td>
-                      <Table.Td className='px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium'>
+                      <Table.Td>
+                        <div className='flex items-center'>
+                          <div>
+                            <div className='text-sm leading-5 font-medium text-gray-900'>
+                              {item.brand.name}
+                            </div>
+                          </div>
+                        </div>
+                      </Table.Td>
+                      <Table.Td>
                         <Link href={`/products/${item.id}/images`}>
-                          <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
+                          <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
                             Imagens
                           </a>
                         </Link>
                         {' | '}
                         <Link href={`/products/${item.id}/edit`}>
-                          <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
+                          <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
                             Editar
                           </a>
                         </Link>
@@ -104,7 +118,7 @@ const Products = () => {
                         <a
                           href='#'
                           onClick={remove(item.id)}
-                          className='text-red-600 hover:text-indigo-900 ml-2'
+                          className='text-red-900 font-medium hover:text-red-400'
                         >
                           Remover
                         </a>

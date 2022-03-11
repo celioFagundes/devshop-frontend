@@ -48,6 +48,7 @@ const CreateBrand = () => {
   const [data, createBrand] = useMutation(CREATE_BRAND)
   const router = useRouter()
   const form = useFormik({
+    validateOnChange:false,
     initialValues: {
       name: '',
       slug: '',
@@ -68,7 +69,7 @@ const CreateBrand = () => {
       </div>
       <div className='flex flex-col mt-5'>
         <div className='-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
             <form onSubmit={form.handleSubmit}>
               <Input
                 label='Nome da marca'

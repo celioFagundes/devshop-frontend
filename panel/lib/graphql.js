@@ -45,7 +45,6 @@ const fetcher = async query => {
     return resToJSON
   }
   const jsonAccessToken = await getNewAccessToken()
-  console.log(jsonAccessToken)
   if (jsonAccessToken.data) {
     const newAccessToken = jsonAccessToken.data.accessToken
     localStorage.setItem('accessToken', newAccessToken)

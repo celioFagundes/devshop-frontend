@@ -61,6 +61,7 @@ const EditBrand = () => {
 }`)
   const [updatedData, updateBrand] = useMutation(UPDATE_BRAND)
   const form = useFormik({
+    validateOnChange:false,
     initialValues: {
       name: '',
       slug: '',
@@ -91,7 +92,7 @@ const EditBrand = () => {
         <Button.LinkOutline href='/brands'>Voltar</Button.LinkOutline>
       </div>
       <div className='flex flex-col mt-5'>
-        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
           <form onSubmit={form.handleSubmit}>
             <Input
               label='Nome da marca'
@@ -110,7 +111,7 @@ const EditBrand = () => {
               helpText='Slug é utilizado para criar URLs amigaveis'
               errorMessage={form.errors.slug}
             />
-            <Button type='submit'>Editar marca</Button>
+            <Button type='submit'>Salvar alterações</Button>
           </form>
           {updatedData && !!updatedData.errors && (
               <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

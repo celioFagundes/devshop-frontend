@@ -66,15 +66,20 @@ const Images = () => {
         <Button.LinkOutline href='/products/'>Voltar</Button.LinkOutline>
       </div>
       <div className='flex flex-col mt-5'>
-        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
           <form onSubmit={form.handleSubmit}>
+            <div className='flex flex-col'>
             <input
+            className='text-white'
               type='file'
               name='file'
+              id= 'file-input'
               onChange={evt => form.setFieldValue('file', evt.target.files[0])}
             />
 
             <Button type='submit'>Adicionar</Button>
+            </div>
+            
           </form>
           {uploadData && !!uploadData.errors && (
             <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>
@@ -83,14 +88,14 @@ const Images = () => {
           )}
           <section className='overflow-hidden text-gray-70 mt-5'>
             <div>
-              <div className='flex flex-wrap  w-full -m-1 md:-m-2 '>
+              <div className='flex flex-wrap  w-full m-1 md:-m-2 '>
                 {(data?.getProductById?.images === null ||
                   data?.getProductById?.images?.length === 0) && (
                   <Alert>Nenhuma imagem neste produto</Alert>
                 )}
                 {data?.getProductById?.images?.map((image, index) => (
                   <div
-                    className='relative flex flex-wrap  bg-slate-400  px-1 py-2 mx-1 my-3 rounded justify-center hover:bg-slate-300'
+                    className='relative flex flex-wrap  bg-slate-900  border border-gray-600 px-1 py-2 mx-1 my-3 rounded justify-center hover:bg-slate-600 hover:cursor-pointer'
                     key={image + index}
                   >
                     <div className='w-full md:p-2 flex items-center justify-center'>
@@ -107,7 +112,7 @@ const Images = () => {
                         position: 'absolute',
                         right: '5px',
                         top: '10px',
-                        maxHeight: '35px',
+                        
                       }}
                     >
                       X

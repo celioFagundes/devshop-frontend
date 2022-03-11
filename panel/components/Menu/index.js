@@ -10,6 +10,8 @@ const MenuNav = ({ children }) => {
   return <nav className='mt-10'>{children}</nav>
 }
 const MenuBrand = ({ children }) => {
+  
+  
   return (
     <div className='flex items-center justify-center mt-8'>
       <div className='flex items-center'>
@@ -23,14 +25,14 @@ const MenuBrand = ({ children }) => {
     </div>
   )
 }
-const MenuNavItem = ({ children, href , Icon}) => {
+const MenuNavItem = ({ children, href , Icon, isSelected}) => {
   return (
     <Link href={href}>
       <a
-        className='flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100'
+        className={`flex items-center mt-4 py-2 px-6 text-white hover:bg-gray-100 hover:bg-opacity-25 hover:text-gray-100 ${isSelected ? 'bg-gray-100 bg-opacity-25' : ''}`}
         href={href}
       >
-       {Icon &&   <Icon className='h-6 w-6'/>}
+       {Icon &&   <Icon size = {24}/>}
         <span className='mx-3'>{children}</span>
       </a>
     </Link>

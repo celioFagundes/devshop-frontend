@@ -16,13 +16,13 @@ const validaSizeTypes = [
 ]
 const CREATE_PRODUCT = `
   mutation createProduct($name: String!, $slug: String!, $description : String!,
-    $category: String!, $brand: String!,$sizeType: String!,$variations: [VariationInput!]) {
+    $category: String!, $brand: String!,$sizeType: String!,$variations: [VariationInput!]!) {
     panelCreateProduct (input: {
-      name:$name, 
-      slug:$slug,
+      name: $name, 
+      slug: $slug,
       description : $description,
       category: $category,
-      brand:$brand
+      brand: $brand,
       sizeType: $sizeType,
       variations: $variations
      }) {
@@ -83,12 +83,17 @@ const ProductSchema = Yup.object().shape({
     Yup.object().shape({
         color: Yup.object().shape({
           colorName: Yup.string()
-          .min(3,'Por favor, informe o nome da cor com pelo menos 3 caracteres')
+          .min(3,'Minimo 3 Caracteres')
           .required('Por favor, informe o nome da cor da cor'),
           colorCode: Yup.string()
           .min(3,'Por favor, informe o nome da cor com pelo menos 3 caracteres')
           .required('Por favor, informe o nome da cor da cor'),
-        })
+        }),
+        size: Yup.string().required('Por favor informe o tamanho ou medida'),
+        sku: Yup.string().min(3, 'Minimo 3 Caracteres').required('Informe um sku valido'),
+        price: Yup.number().moreThan(0, 'Precisa ser maior que 0').required('Informe o preço'),
+        weight: Yup.number().moreThan(0, 'Precisa ser maior que 0').required('Informe o  peso'),
+        stock: Yup.number().moreThan(0, 'Precisa ser maior que 0').required('Informe a quantidade de estoque'),
         
     }),
   ),
@@ -96,10 +101,10 @@ const ProductSchema = Yup.object().shape({
 const CreateProduct = () => {
   const { data: categories } = useQuery(GET_ALL_CATEGORIES)
   const { data: brands } = useQuery(GET_ALL_BRANDS)
-  const [productUnique, setProductUnique] = useState(true)
   const [data, createProduct] = useMutation(CREATE_PRODUCT)
   const router = useRouter()
   const form = useFormik({
+    validateOnChange:false,
     initialValues: {
       name: '',
       slug: '',
@@ -165,7 +170,7 @@ const CreateProduct = () => {
       </div>
       <div className='flex flex-col mt-5'>
         <div className='-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
             <form onSubmit={form.handleSubmit}>
               <div className='flex flex-row flex-wrap items-start justify-start'>
                 <Input
@@ -222,7 +227,6 @@ const CreateProduct = () => {
                   errorMessage={form.errors.sizeType}
                 />
               </div>
-              <pre>{JSON.stringify(form.errors,null,2)}</pre>
               <FormikProvider value={form}>
                 <FieldArray
                   name='variations'
@@ -253,10 +257,10 @@ const CreateProduct = () => {
 
                         { form.values.variations.map((variation, index) => (
                           <div
-                            className='flex flex-row flex-wrap my-2 p-5 bg-gray-100 rounded relative'
+                            className='flex flex-row flex-wrap my-2 p-5 border border-gray-600 bg-gray-800 rounded relative'
                             key={index}
                           >
-                            <div className=' flex  flex-row items-center justify-center mr-2 relative'>
+                            <div className=' flex  flex-row items-start justify-center mr-2 mb-4 relative h-16 '>
                               <Input
                                 label='Nome e codigo da Cor'
                                 placeholder='Nome da cor'
@@ -288,12 +292,13 @@ const CreateProduct = () => {
                               onChange={form.handleChange}
                               value={form.values.variations[index].size}
                               name={`variations.${index}.size`}
+                              errorMessage = {form.errors?.variations && form.errors.variations[index]?.size && form.errors.variations[index].size}
                             />
-                            <div className='mx-2'>
-                              <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                            <div className=''>
+                              <label className='block uppercase tracking-wide text-gray-100 text-xs font-bold mb-2'>
                                 Voltagem
                               </label>
-                              <div className='flex flex-row items-center justify-center'>
+                              <div className='flex flex-row items-center justify-center my-2'>
                                 <Input.Checkbox
                                   label={'120V'}
                                   type='checkbox'
@@ -317,13 +322,14 @@ const CreateProduct = () => {
                                 />
                               </div>
                             </div>
-                            <div className='flex flex-row items-center justify-between'>
+                            <div className='flex flex-row flex-wrap items-start justify-between h'>
                               <Input
                                 label='SKU'
                                 placeholder='Preencha o SKU da variação'
                                 onChange={form.handleChange}
                                 value={form.values.variations[index].sku}
                                 name={`variations.${index}.sku`}
+                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.sku && form.errors.variations[index].sku}
                               />
 
                               <Input
@@ -332,6 +338,7 @@ const CreateProduct = () => {
                                 onChange={form.handleChange}
                                 value={form.values.variations[index].price}
                                 name={`variations.${index}.price`}
+                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.price && form.errors.variations[index].price}
                               />
 
                               <Input
@@ -340,6 +347,7 @@ const CreateProduct = () => {
                                 onChange={form.handleChange}
                                 value={form.values.variations[index].weight}
                                 name={`variations.${index}.weight`}
+                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.weight && form.errors.variations[index].weight}
                               />
 
                               <Input
@@ -348,15 +356,17 @@ const CreateProduct = () => {
                                 onChange={form.handleChange}
                                 value={form.values.variations[index].stock}
                                 name={`variations.${index}.stock`}
+                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.stock && form.errors.variations[index].stock}
                               />
                             </div>
+                            { index > 0 &&
                             <button
                               type='button'
                               className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400 absolute right-2 top-3'
                               onClick={() => arrayHelpers.remove(index)}
                             >
                               X
-                            </button>
+                            </button>}
                           </div>
                         ))}
                       </div>

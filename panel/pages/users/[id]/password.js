@@ -59,7 +59,7 @@ const AlterarSenha = () => {
         <Button.LinkOutline href='/users'>Voltar</Button.LinkOutline>
       </div>
       <div className='flex flex-col mt-5'>
-        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
           <form onSubmit={form.handleSubmit}>
             <Input
               label='Senha do usuario'

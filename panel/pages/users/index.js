@@ -67,29 +67,29 @@ const Users = () => {
                       </Table.Td>
                       <Table.Td className='px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium'>
                         <Link href={`/users/${item.id}/sessions`}>
-                          <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
+                          <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
                             Sessões
                           </a>
                         </Link>                
                         {' | '}
                         <Link href={`/users/${item.id}/password`}>
-                          <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
+                          <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
                             Alterar senha
                           </a>
                         </Link>                
                         {' | '}
                         <Link href={`/users/${item.id}/edit`}>
-                          <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
-                            Edit
+                          <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
+                            Editar
                           </a>
                         </Link>
                         {' | '}
                         <a
                           href='#'
                           onClick={remove(item.id)}
-                          className='text-red-600 hover:text-indigo-900 ml-2'
+                          className='text-red-900 font-medium hover:text-red-400'
                         >
-                          Remove
+                          Remover
                         </a>
                       </Table.Td>
                     </Table.Row>

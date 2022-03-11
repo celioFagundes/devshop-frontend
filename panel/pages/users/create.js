@@ -7,9 +7,13 @@ import { useRouter } from 'next/router'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import * as Yup from 'yup'
-
+import Select from '../../components/Select'
+const roleOptions = [
+  {id: 'ADMIN', label: 'Administrador'},
+  {id: 'USER', label: 'Usuario'}
+]
 const CREATE_USER = `
-  mutation createUser($name: String!, $email: String!, $password: String!, $role: String!) {
+  mutation createUser($name: String!, $email: String!, $password: String!, $role: UserRole!) {
     panelCreateUser (input: {
       name:$name, 
       email:$email,
@@ -58,6 +62,7 @@ const CreateUser = () => {
   const [data, createUser] = useMutation(CREATE_USER)
   const router = useRouter()
   const form = useFormik({
+    validateOnChange: false,
     initialValues: {
       name: '',
       email: '',
@@ -80,43 +85,52 @@ const CreateUser = () => {
       </div>
       <div className='flex flex-col mt-5'>
         <div className='-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
             <form onSubmit={form.handleSubmit}>
-              <Input
-                label='Nome do usuario'
-                placeholder='Preencha o nome do usuario'
-                onChange={form.handleChange}
-                value={form.values.name}
-                name='name'
-                errorMessage={form.errors.name}
-              />
-              <Input
-                label='Email do usuario'
-                placeholder='Preencha o email do usuario'
-                onChange={form.handleChange}
-                value={form.values.email}
-                name='email'
-                errorMessage={form.errors.email}
-                helpText='Email é utilizado para criar URLs amigaveis'
-              />
-              <Input
-                label='Senha do usuario'
-                placeholder='Preencha a senha do usuario'
-                onChange={form.handleChange}
-                value={form.values.password}
-                name='password'
-                errorMessage={form.errors.password}
-              />
-              <Input
-                label='Role do usuario'
-                placeholder='Preencha a role do usuario'
-                onChange={form.handleChange}
-                value={form.values.role}
-                name='role'
-                errorMessage={form.errors.role}
-              />
+              <div className='my-2'>
+                <Input
+                  label='Nome do usuario'
+                  placeholder='Preencha o nome do usuario'
+                  onChange={form.handleChange}
+                  value={form.values.name}
+                  name='name'
+                  errorMessage={form.errors.name}
+                />
+              </div>
 
-              <Button type='submit'>Criar usuario</Button>
+              <div className='my-2'>
+                <Input
+                  label='Email do usuario'
+                  placeholder='Preencha o email do usuario'
+                  onChange={form.handleChange}
+                  value={form.values.email}
+                  name='email'
+                  errorMessage={form.errors.email}
+                />
+              </div>
+
+              <div className='my-2'>
+                <Input
+                  label='Senha do usuario'
+                  placeholder='Preencha a senha do usuario'
+                  onChange={form.handleChange}
+                  value={form.values.password}
+                  name='password'
+                  errorMessage={form.errors.password}
+                />
+              </div>
+
+              <div className='my-2'>
+              <Select
+                  label= 'Role do usuario'
+                  onChange={form.handleChange}
+                  name='role'
+                  value={form.values.role}
+                  options={roleOptions}
+                  errorMessage={form.errors.role}
+                />
+                <Button type='submit'>Criar usuario</Button>
+              </div>
             </form>
             {data && !!data.errors && (
               <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

@@ -7,10 +7,14 @@ import { useFormik } from 'formik'
 import Input from '../../../components/Input'
 import Button from '../../../components/Button'
 import * as Yup from 'yup'
-
+import Select from '../../../components/Select'
+const roleOptions = [
+  {id: 'ADMIN', label: 'Administrador'},
+  {id: 'USER', label: 'Usuario'}
+]
 let id = ''
 const UPDATE_USER = `
-    mutation updateUser($id: String!, $name: String!, $email: String!, $role: String!) {
+    mutation updateUser($id: String!, $name: String!, $email: String!, $role: UserRole!) {
         panelUpdateUser (input: {
         id:$id,
         name:$name, 
@@ -28,7 +32,6 @@ const UserSchema = Yup.object().shape({
     .min(3, 'Por favor, informe um nome com pelo menos 3 caracteres')
     .required('Por favor, informe um nome'),
   role: Yup.string()
-    .min(3, 'Por favor, informe uma role com pelo menos 3 caracteres')
     .required('Por favor, informe uma role'),
   email: Yup.string()
     .min(3, 'Por favor, informe um email com pelo menos 3 caracteres')
@@ -67,6 +70,7 @@ const EditUser = () => {
 }`)
   const [updatedData, updateUser] = useMutation(UPDATE_USER)
   const form = useFormik({
+    validateOnChange:false,
     initialValues: {
       name: '',
       email: '',
@@ -89,6 +93,7 @@ const EditUser = () => {
     if (data && data.panelGetUserById) {
       form.setFieldValue('name', data.panelGetUserById.name)
       form.setFieldValue('email', data.panelGetUserById.email)
+      
     }
   }, [data])
   return (
@@ -98,33 +103,41 @@ const EditUser = () => {
         <Button.LinkOutline href='/users'>Voltar</Button.LinkOutline>
       </div>
       <div className='flex flex-col mt-5'>
-        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
+        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
           <form onSubmit={form.handleSubmit}>
-            <Input
-              label='Nome do usuario'
-              placeholder='Preencha o nome do usuario'
-              onChange={form.handleChange}
-              value={form.values.name}
-              name='name'
-              errorMessage={form.errors.name}
-            />
-            <Input
-              label='Email do usuario'
-              placeholder='Preencha o email do usuario'
-              onChange={form.handleChange}
-              value={form.values.email}
-              name='email'
-              errorMessage={form.errors.email}
-              helpText='Email é utilizado para criar URLs amigaveis'
-            />
-            <Input
-              label='Role do usuario'
-              placeholder='Preencha a role do usuario'
-              onChange={form.handleChange}
-              value={form.values.role}
-              name='role'
-              errorMessage={form.errors.role}
-            />
+          <div className='my-2'>
+                <Input
+                  label='Nome do usuario'
+                  placeholder='Preencha o nome do usuario'
+                  onChange={form.handleChange}
+                  value={form.values.name}
+                  name='name'
+                  errorMessage={form.errors.name}
+                />
+              </div>
+
+              <div className='my-2'>
+                <Input
+                  label='Email do usuario'
+                  placeholder='Preencha o email do usuario'
+                  onChange={form.handleChange}
+                  value={form.values.email}
+                  name='email'
+                  errorMessage={form.errors.email}
+                />
+              </div>
+
+              <div className='my-2'>
+              <Select
+                  label= 'Role do usuario'
+                  onChange={form.handleChange}
+                  name='role'
+                  value={form.values.role}
+                  options={roleOptions}
+                  errorMessage={form.errors.role}
+                />
+                
+              </div>
             <Button type='submit'>Editar usuario</Button>
           </form>
           {updatedData && !!updatedData.errors && (

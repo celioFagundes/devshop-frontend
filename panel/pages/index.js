@@ -21,6 +21,7 @@ const Index = () => {
   const [signError, setSignError] = useState(false)
   const router = useRouter()
   const form = useFormik({
+    validateOnChange:false,
     initialValues: {
       email: '',
       password: '',

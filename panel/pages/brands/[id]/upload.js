@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Layout from '../../../components/Layout'
 import Title from '../../../components/Title'
-import {  useQuery,  useUpload } from '../../../lib/graphql'
+import { useQuery, useUpload } from '../../../lib/graphql'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import Input from '../../../components/Input'
@@ -30,12 +30,11 @@ const UploadLogo = () => {
       id: router.query.id,
       file: '',
     },
-    
+
     onSubmit: async values => {
       const brand = {
         ...values,
         id: router.query.id,
-        
       }
       const data = await uploadBrandLogo(brand)
 
@@ -54,16 +53,20 @@ const UploadLogo = () => {
         <Button.LinkOutline href='/brands'>Voltar</Button.LinkOutline>
       </div>
       <div className='flex flex-col mt-5'>
-        <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200 bg-white p-12'>
-          {JSON.stringify(form.values)}
+        <div className='align-middle  inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
           <form onSubmit={form.handleSubmit}>
-            <input
-              type='file'
-              name='file'
-              onChange={evt => form.setFieldValue('file',  evt.target.files[0])}
-            />
-         
-            <Button type='submit'>Editar marca</Button>
+            <div className='flex flex-col'>
+              <input
+                type='file'
+                name='file'
+                className='text-white'
+                onChange={evt =>
+                  form.setFieldValue('file', evt.target.files[0])
+                }
+              />
+
+              <Button type='submit'>Salvar imagem</Button>
+            </div>
           </form>
           {uploadData && !!uploadData.errors && (
             <p className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2'>

@@ -100,14 +100,14 @@ const Brands = () => {
                         </Table.Td>
                         <Table.Td className='px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium'>
                           <Link href={`/brands/${item.id}/edit`}>
-                            <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
-                              Edit
+                            <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
+                              Editar
                             </a>
                           </Link>
                           {' | '}
 
                           <Link href={`/brands/${item.id}/upload`}>
-                            <a className='text-indigo-600 hover:text-indigo-900 mr-2'>
+                            <a className='text-blue-900 font-medium hover:text-indigo-400 mr-2'>
                               Upload Logo
                             </a>
                           </Link>
@@ -118,9 +118,9 @@ const Brands = () => {
                               <a
                                 href='#'
                                 onClick={removeBrandLogo(item.id)}
-                                className='text-red-600 hover:text-indigo-900 ml-2'
+                                className='text-red-900 font-medium hover:text-red-400 mr-2'
                               >
-                                Remove logo
+                                Remover logo
                               </a>
                               {' | '}
                             </>
@@ -128,9 +128,9 @@ const Brands = () => {
                           <a
                             href='#'
                             onClick={remove(item.id)}
-                            className='text-red-600 hover:text-indigo-900 ml-2'
+                            className='text-red-900 font-medium hover:text-red-400 '
                           >
-                            Remove
+                            Remover
                           </a>
                         </Table.Td>
                       </Table.Row>
