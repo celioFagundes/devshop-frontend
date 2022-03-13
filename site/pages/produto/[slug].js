@@ -4,7 +4,7 @@ import Layout from '../../components/Layout'
 import { fetcher } from '../../lib/graphql'
 import { useEffect } from 'react/cjs/react.development'
 import { useCart } from '../../lib/CartContext'
-
+import SlickCarousel from '../../components/SlickCarousel/SlickCarousel'
 const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
 const shoesSizes = [
   '31',
@@ -120,13 +120,8 @@ const Products = ({ product, categories }) => {
   return (
     <Layout categories={categories}>
       <div className='container px-5 py-24 mx-auto'>
-        <pre>{JSON.stringify(cart.items,null,2)}</pre>
-        <div className='lg:w-4/5 mx-auto flex flex-wrap'>
-          <img
-            alt='ecommerce'
-            className='lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded'
-            src='https://dummyimage.com/400x400'
-          />
+        <div className='flex flex-wrap '>
+          <div className='lg:w-1/2'><SlickCarousel images = {product.images}/></div> 
           <div className='lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0'>
             <h2 className='text-sm title-font text-gray-500 tracking-widest'>
               BRAND NAME

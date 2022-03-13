@@ -50,12 +50,7 @@ export const CartProvider = ({ children }) => {
         }
         return newCart
       })
-    }}
-    /*
-      const { [variationId]: selectedVariation, ...newCart } = current
-      localStorage.setItem('cart', JSON.stringify(newCart))
-      return newCart*/
-    
+    }} 
   }
   const cartSize = Object.keys(items).length
   return (
