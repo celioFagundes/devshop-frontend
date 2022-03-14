@@ -1,10 +1,20 @@
 import { gql } from 'graphql-request'
 import Layout from '../../components/Layout'
 import { fetcher } from '../../lib/graphql'
-import Link from 'next/link'
+import CardProduct from '../../components/CardProduct'
+
 const GET_ALL_CATEGORIES = gql`
   query {
     categories: getAllCategories {
+      id
+      name
+      slug
+    }
+  }
+`
+const GET_ALL_BRANDS = gql`
+  query {
+    brands: getAllBrands {
       id
       name
       slug
@@ -17,6 +27,9 @@ const GET_ALL_PRODUCTS_BY_CATEGORY = gql`
       id
       name
       slug
+      brand{
+        name
+      }
       images
       variations{
         price
@@ -24,40 +37,16 @@ const GET_ALL_PRODUCTS_BY_CATEGORY = gql`
     }
   }
 `
-const ProductsByCategory = ({ products, categories }) => {
+const ProductsByCategory = ({ products, categories , brands, categoria}) => {
   return (
-    <Layout categories={categories}>
+    <Layout categories={categories} brands = {brands}>
+      <p className='bg-blue-500 py-2 px-4 font-medium text-white mb-5'>Confira nossos produtos da categoria {categoria}</p>
       <section className='text-gray-600 body-font'>
         <div className='container px-5 py-24 mx-auto'>
           <div className='flex flex-wrap -m-4'>
             {products?.length === 0 && <p>Sem produtos para esta categoria</p>}
             {products?.map(product => (
-              <div className='lg:w-1/4 md:w-1/2 p-4 w-full' key = {product.id}>
-                <a className='block relative h-48 rounded overflow-hidden'>
-                  {product.images && product.images.length > 0 ? (
-                    <img
-                      alt={product.name}
-                      className='object-contain object-center w-full h-full block'
-                      src={product.images[0]}
-                    />
-                  ) : (
-                    <img
-                      alt={product.name}
-                      className='object-cover object-center w-full h-full block'
-                      src='https://dummyimage.com/420x260'
-                    />
-                  )}
-                </a>
-                <div className='mt-4'>
-                  <h3 className='text-gray-500 text-xs tracking-widest title-font mb-1'>
-                    CATEGORY
-                  </h3>
-                  <h2 className='text-gray-900 title-font text-lg font-medium'>
-                    <Link href = {`/produto/${product.slug}`}>{product.name}</Link>
-                  </h2>
-                  <p className='mt-1'>R$ {product.variations[0].price.toFixed(2)}</p>
-                </div>
-              </div>
+              <CardProduct product = {product}/>
             ))}
           </div>
         </div>
@@ -70,10 +59,13 @@ export async function getServerSideProps(context) {
     slug: context.query.slug,
   })
   const { categories } = await fetcher(GET_ALL_CATEGORIES)
+  const { brands } = await fetcher(GET_ALL_BRANDS)
   return {
     props: {
+      categoria: context.query.slug,
       products,
       categories,
+      brands
     },
   }
 }

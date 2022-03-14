@@ -1,0 +1,38 @@
+import React from 'react'
+import {AiOutlinePlus ,AiOutlineMinus} from 'react-icons/ai'
+const CartPreview = ({ items , addOne , removeOne}) => {
+  return (
+    <div className='absolute right-12 top-16 h-52 w-90 overflow-scroll bg-gray-50 px-3  py-3 rounded shadow-sm'>
+      <p className='text-gray-900 font-medium border-b '>Seu carrinho:</p>
+      <div>
+        {items &&
+          Object.keys(items).map(item => (
+            <div className='py-2 border-b flex justify-between items-center'>
+              <img className='h-10 w-10 mr-2' src={items[item].images[0]} />
+              <div className='flex flex-col items-start justify-start px-0 mx-0'>
+                <p className='text-gray-800 font-medium text-sm'>
+                  {items[item].name}
+                </p>
+                <p className='text-gray-400 font-medium text-sm'>
+                  R$ {items[item].variation.price.toLocaleString('pt-br')} x{' '}
+                  {items[item].qtd}{' '}
+                  <span className='text-gray-800'>
+                    R${' '}
+                    {(items[item].variation.price * items[item].qtd).toLocaleString('pt-br')}
+                  </span>
+                </p>
+              </div>
+              <button className='ml-5' onClick = {() => addOne(item)}>
+                <AiOutlinePlus color='#000'/>
+              </button>
+              <button className='ml-5' onClick = {() => removeOne(item)}>
+                <AiOutlineMinus color='#000'/>
+              </button>
+            </div>
+          ))}
+      </div>
+    </div>
+  )
+}
+
+export default CartPreview
