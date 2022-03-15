@@ -31,6 +31,9 @@ const EmblaCarousel = ({ slides }) => {
     embla.on('select', onSelect)
   }, [embla, onSelect])
 
+  useEffect(() =>{
+    embla&& embla.reInit()
+  },[slides])
   return (
     <>
       <div className='embla '>

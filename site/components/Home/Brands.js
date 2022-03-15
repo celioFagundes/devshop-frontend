@@ -4,12 +4,9 @@ import React from 'react'
 const Brands = ({ brands }) => {
   return (
     <section className='text-gray-600 body-font bg-white shadow-sm'>
-      <div className='container px-5 py-20 mx-auto'>
-        <div className='flex flex-col text-center w-full mb-10'>
-          <h1 className='sm:text-3xl text-2xl uppercase font-medium title-font mb-4 text-gray-900'>
-            Nossas marcas
-          </h1>
-          <p className='lg:w-2/3 mx-auto text-xl leading-relaxed'>
+      <div className='container  pb-20 mx-auto'>
+        <div className='flex flex-col text-center w-full mb-10 bg-sky-600 py-4'>
+          <p className='lg:w-2/3 mx-auto text-xl leading-relaxed text-white'>
             As melhores marcas você encontra aqui no DevShop
           </p>
         </div>

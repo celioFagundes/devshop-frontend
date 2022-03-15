@@ -232,7 +232,6 @@ const Products = ({ product, categories, brands }) => {
                 {product.sizeType === 'measures' && (
                   <div className='relative'>{selectedVariation.size}</div>
                 )}
-                <pre>{/*JSON.stringify(selectedVariation,null,2)*/}</pre>
                 {product && product.voltage && product.voltage.length > 0 && (
                   <div className='flex flex-col my-2'>
                     <span className='title-font  font-medium text-lg text-gray-900'>
@@ -280,11 +279,11 @@ const Products = ({ product, categories, brands }) => {
                 R$ {selectedVariation && selectedVariation.price}
               </p>
               {Object.keys(cart.items).includes(
-                product.name + selectedVariation.sku + voltageSelected,
+                 selectedVariation.sku + voltageSelected,
               ) ? (
                 <button
                   onClick={() =>
-                    cart.removeFromCart(product, selectedVariation, voltageSelected)
+                    cart.removeFromCart(selectedVariation.sku, voltageSelected)
                   }
                   className='w-full sm:w-60 text-center my-3 sm:my-0 ml-auto text-white bg-indigo-400 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
                 >
@@ -293,7 +292,7 @@ const Products = ({ product, categories, brands }) => {
               ) : (
                 <button
                   onClick={() =>
-                    cart.addToCart(product, selectedVariation, voltageSelected)
+                    cart.addToCart(product,selectedVariation, voltageSelected)
                   }
                   className='w-full sm:w-60 text-center my-3 sm:my-0 ml-auto text-white bg-indigo-600 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
                 >

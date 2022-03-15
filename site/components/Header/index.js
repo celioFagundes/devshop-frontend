@@ -19,9 +19,8 @@ const Header = ({ categories, brands }) => {
     setMenuBrands(!menuBrands)
     setMenuCategories(false)
   }
-  console.log(cart.items)
   return (
-    <header className='text-white bg-blue-800 body-font'>
+    <header className='text-white bg-blue-700 body-font'>
       <div className='container  mx-auto flex flex-wrap px-1 xs:px-5 py-2 md:p-5 flex-row justify-between items-center'>
         <div className='flex items-center justify-between'>
           <Link href='/'>
@@ -118,7 +117,7 @@ const Header = ({ categories, brands }) => {
             <span>{cart && cart.cartSize}</span>
           </div>}
         </div>
-        {cartOpen && <CartPreview items={cart.items} addOne = {cart.addOne} removeOne = {cart.removeOne} />}
+        {cartOpen && <CartPreview items={cart.items} addOne = {cart.addOne} removeOne = {cart.removeOne} closeCart = {() => setCartOpen(false)} />}
       </div>
     </header>
   )
