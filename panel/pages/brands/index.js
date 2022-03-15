@@ -60,7 +60,7 @@ const Brands = () => {
             <Alert>Nenhuma marca encontrada</Alert>
           )}
           {data && data.getAllBrands.length > 0 && (
-            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200'>
+            <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg '>
               <Table>
                 <Table.Head>
                   <Table.Th>Logo</Table.Th>

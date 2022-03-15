@@ -13,6 +13,7 @@ const GET_ME = `
     id
     name
     email
+    role
   }
 }`
 const Layout = ({ children }) => {
@@ -26,8 +27,10 @@ const Layout = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('accessToken')
+    localStorage.clear()
     router.push('/')
   }
+  console.log(data?.panelGetMe)
   const currentPage = router.pathname.split('/')[1]
   return (
     <div>
@@ -67,9 +70,12 @@ const Layout = ({ children }) => {
             <Menu.NavItem href='/brands' Icon={BsFillGridFill} isSelected = {currentPage === 'brands'}>
               Marcas
             </Menu.NavItem>
-            <Menu.NavItem href='/users' Icon={ImUser} isSelected = {currentPage === 'users'}>
+            {data && data.panelGetMe && data.panelGetMe.role === 'admin' &&
+              <Menu.NavItem href='/users' Icon={ImUser} isSelected = {currentPage === 'users'}>
               Usuarios
             </Menu.NavItem>
+            }
+            
           </Menu.Nav>
         </div>
         <div className='flex-1 flex flex-col overflow-hidden'>

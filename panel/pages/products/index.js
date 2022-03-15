@@ -77,7 +77,7 @@ const Products = () => {
                             <div className='text-sm leading-5 font-medium text-gray-900'>
                               {item.name}
                             </div>
-                            <div className='text-sm leading-5 text-gray-500'>
+                            <div className='text-sm leading-5 text-gray-500  max-w-xs overflow-hidden truncate'>
                               {item.description}
                             </div>
                           </div>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import Button from '../../../components/Button'
 import Alert from '../../../components/Alert'
-
+import * as Yup from 'yup'
 const UPLOAD_PRODUCT_IMAGE = `
     mutation uploadProductImage($id: String!, $file: Upload!) {
         panelUploadProductImage(
@@ -32,6 +32,10 @@ const Images = () => {
         images
       }
 }`)
+const ImageSchema = Yup.object().shape({
+  file: Yup.string()
+    .required('Por favor, selecione uma imagem um nome'),
+})
   const [deleteImageData, deleteProductImage] =
     useMutation(DELETE_PRODUCT_IMAGE)
   const [uploadData, uploadProductImage] = useUpload(UPLOAD_PRODUCT_IMAGE)
@@ -39,7 +43,9 @@ const Images = () => {
     initialValues: {
       id: router.query.id,
       file: '',
+      
     },
+    validationSchema: ImageSchema,
 
     onSubmit: async values => {
       const product = {
@@ -74,9 +80,13 @@ const Images = () => {
               type='file'
               name='file'
               id= 'file-input'
+              onBlur={form.handleBlur}
               onChange={evt => form.setFieldValue('file', evt.target.files[0])}
             />
-
+            {form.errors?.file &&
+              <p className='text-red-500 text-xs italic'>Por favor selecione uma imagem</p>
+          }
+            
             <Button type='submit'>Adicionar</Button>
             </div>
             
@@ -106,6 +116,7 @@ const Images = () => {
                       />
                     </div>
                     <button
+                    
                       onClick={removeProductImage(router.query.id, image)}
                       className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400'
                       style={{

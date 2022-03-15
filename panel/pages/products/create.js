@@ -9,6 +9,25 @@ import Input from '../../components/Input'
 import Select from '../../components/Select'
 import * as Yup from 'yup'
 import Modal from '../../components/Modal'
+const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
+const shoesSizes = [
+  '31',
+  '32',
+  '33',
+  '34',
+  '35',
+  '36',
+  '37',
+  '38',
+  '39',
+  '40',
+  '41',
+  '42',
+  '43',
+  '44',
+  '45',
+  '46',
+]
 
 const validaSizeTypes = [
   { label: 'Roupas', id: 'clothes' },
@@ -17,7 +36,7 @@ const validaSizeTypes = [
 ]
 const CREATE_PRODUCT = `
   mutation createProduct($name: String!, $slug: String!, $description : String!,
-    $category: String!, $brand: String!,$sizeType: String!,$variations: [VariationInput!]!) {
+    $category: String!, $brand: String!,$sizeType: String!,$voltage: [String!]!, $variations: [VariationInput!]!) {
     panelCreateProduct (input: {
       name: $name, 
       slug: $slug,
@@ -25,6 +44,7 @@ const CREATE_PRODUCT = `
       category: $category,
       brand: $brand,
       sizeType: $sizeType,
+      voltage: $voltage,
       variations: $variations
      }) {
       id
@@ -82,20 +102,30 @@ const ProductSchema = Yup.object().shape({
     }),
   variations: Yup.array().of(
     Yup.object().shape({
-        color: Yup.object().shape({
-          colorName: Yup.string()
-          .min(3,'Minimo 3 Caracteres')
+      color: Yup.object().shape({
+        colorName: Yup.string()
+          .min(3, 'Minimo 3 Caracteres')
           .required('Por favor, informe o nome da cor da cor'),
-          colorCode: Yup.string()
-          .min(3,'Por favor, informe o nome da cor com pelo menos 3 caracteres')
+        colorCode: Yup.string()
+          .min(
+            3,
+            'Por favor, informe o nome da cor com pelo menos 3 caracteres',
+          )
           .required('Por favor, informe o nome da cor da cor'),
-        }),
-        size: Yup.string().required('Por favor informe o tamanho ou medida'),
-        sku: Yup.string().min(3, 'Minimo 3 Caracteres').required('Informe um sku valido'),
-        price: Yup.number().moreThan(0, 'Precisa ser maior que 0').required('Informe o preço'),
-        weight: Yup.number().moreThan(0, 'Precisa ser maior que 0').required('Informe o  peso'),
-        stock: Yup.number().moreThan(0, 'Precisa ser maior que 0').required('Informe a quantidade de estoque'),
-        
+      }),
+      size: Yup.string().required('Por favor informe o tamanho ou medida'),
+      sku: Yup.string()
+        .min(3, 'Minimo 3 Caracteres')
+        .required('Informe um sku valido'),
+      price: Yup.number()
+        .moreThan(0, 'Precisa ser maior que 0')
+        .required('Informe o preço'),
+      weight: Yup.number()
+        .moreThan(0, 'Precisa ser maior que 0')
+        .required('Informe o  peso'),
+      stock: Yup.number()
+        .moreThan(0, 'Precisa ser maior que 0')
+        .required('Informe a quantidade de estoque'),
     }),
   ),
 })
@@ -106,9 +136,9 @@ const CreateProduct = () => {
   const [data, createProduct] = useMutation(CREATE_PRODUCT)
   const router = useRouter()
   const form = useFormik({
-    validateOnChange:false,
-    validateOnMount:true,
-    validateOnBlur:true,
+    validateOnChange: false,
+    validateOnMount: true,
+    validateOnBlur: true,
     initialValues: {
       name: '',
       slug: '',
@@ -116,13 +146,13 @@ const CreateProduct = () => {
       category: '',
       brand: '',
       sizeType: '',
+      voltage: [],
       variations: [
         {
           color: {
             colorName: '',
             colorCode: '#000',
           },
-          voltage: [],
           size: '',
           sku: '',
           price: 0,
@@ -166,8 +196,8 @@ const CreateProduct = () => {
       }
     })
   }
-  const checkForErrors = async() =>{
-    if(JSON.stringify(form.errors) === '{}'){
+  const checkForErrors = async () => {
+    if (JSON.stringify(form.errors) === '{}') {
       setModalVisible(true)
     }
   }
@@ -202,7 +232,7 @@ const CreateProduct = () => {
                   helpText='Slug é utilizado para criar URLs amigaveis'
                 />
               </div>
-              <div className='my-2'>
+              <div className='my-2 relative'>
                 <Input.TextArea
                   label='Descrição do produto'
                   placeholder='Preencha a descrição do produto'
@@ -211,6 +241,7 @@ const CreateProduct = () => {
                   value={form.values.description}
                   name='description'
                   errorMessage={form.errors.description}
+                  textLength={form.values.description.length}
                 />
               </div>
               <div className='flex flex-row flex-wrap items center justify-start my-2'>
@@ -242,6 +273,40 @@ const CreateProduct = () => {
                   errorMessage={form.errors.sizeType}
                 />
               </div>
+              <div>
+                <label className='block uppercase text-gray-100 text-xs font-bold mb-2'>
+                  Voltagem
+                </label>
+                <div className='flex flex-row  w-52  items-center justify-start my-2'>
+                  <Input.Checkbox
+                    label={'120V'}
+                    type='checkbox'
+                    checked={form.values.voltage.indexOf('Bivolt') >= 0}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    name='voltage'
+                    value='120V'
+                  />
+                  <Input.Checkbox
+                    label={'220V'}
+                    type='checkbox'
+                    checked={form.values.voltage.indexOf('Bivolt') >= 0}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    name='voltage'
+                    value='220V'
+                  />
+                  <Input.Checkbox
+                    label={'Bivolt'}
+                    type='checkbox'
+                    checked={form.values.voltage.indexOf('Bivolt') >= 0}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    name='voltage'
+                    value='Bivolt'
+                  />
+                </div>
+              </div>
               <FormikProvider value={form}>
                 <FieldArray
                   name='variations'
@@ -257,7 +322,6 @@ const CreateProduct = () => {
                                   colorName: '',
                                   colorCode: '#000',
                                 },
-                                voltage: [],
                                 size: '',
                                 sku: '',
                                 price: 0,
@@ -269,12 +333,68 @@ const CreateProduct = () => {
                             Adicionar variação
                           </Button>
                         </div>
-
-                        { form.values.variations.map((variation, index) => (
+                        {form.values.variations.map((variation, index) => (
                           <div
                             className='flex flex-row flex-wrap my-2 p-5 border border-gray-600 bg-gray-800 rounded relative'
                             key={index}
                           >
+                            <div className='flex flex-row flex-wrap items-start justify-between h'>
+                              <Input
+                                label='SKU'
+                                placeholder='Preencha o SKU da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].sku}
+                                name={`variations.${index}.sku`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.sku &&
+                                  form.errors.variations[index].sku
+                                }
+                              />
+
+                              <Input
+                                label='Preço'
+                                placeholder='Preencha o preço da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].price}
+                                name={`variations.${index}.price`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.price &&
+                                  form.errors.variations[index].price
+                                }
+                              />
+
+                              <Input
+                                label='Peso'
+                                placeholder='Preencha o peso da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].weight}
+                                name={`variations.${index}.weight`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.weight &&
+                                  form.errors.variations[index].weight
+                                }
+                              />
+
+                              <Input
+                                label='Estoque'
+                                placeholder='Preencha o estoque da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].stock}
+                                name={`variations.${index}.stock`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.stock &&
+                                  form.errors.variations[index].stock
+                                }
+                              />
+                            </div>
                             <div className=' flex  flex-row items-start justify-center mr-2 mb-4 relative h-16 '>
                               <Input
                                 label='Nome e codigo da Cor'
@@ -285,7 +405,12 @@ const CreateProduct = () => {
                                   form.values.variations[index].color.colorName
                                 }
                                 name={`variations.${index}.color.colorName`}
-                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.color?.colorName && form.errors.variations[index].color.colorName}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.color
+                                    ?.colorName &&
+                                  form.errors.variations[index].color.colorName
+                                }
                               />
                               <Input.Color
                                 label='Codigo da Cor'
@@ -299,98 +424,71 @@ const CreateProduct = () => {
                                   form.values.variations[index].color.colorCode
                                 }
                                 name={`variations.${index}.color.colorCode`}
-                                
                               />
                             </div>
+                            <>
+                              {form.values.sizeType === 'measures' && (
+                                <Input
+                                  label='Tamanho'
+                                  placeholder='Preencha o tamanho'
+                                  onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
+                                  value={form.values.variations[index].size}
+                                  name={`variations.${index}.size`}
+                                  errorMessage={
+                                    form.errors?.variations &&
+                                    form.errors.variations[index]?.size &&
+                                    form.errors.variations[index].size
+                                  }
+                                />
+                              )}
+                              
+                              {form.values.sizeType === 'clothes' && (
+                                <Select.SingleValues
+                                  label={
+                                    'Tamanho'
+                                  }
+                                  onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
+                                  name={`variations.${index}.size`}
+                                  value={form.values.variations[index].size}
+                                  options={clothesSizes}
+                                  errorMessage={
+                                    form.errors?.variations &&
+                                    form.errors.variations[index]?.size &&
+                                    form.errors.variations[index].size
+                                  }
+                                />
+                              )}
+                              {form.values.sizeType === 'shoes' && (
+                                <Select.SingleValues
+                                  label={
+                                    'Tamanho'
+                                  }
+                                  onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
+                                  name={`variations.${index}.size`}
+                                  value={form.values.variations[index].size}
+                                  options={shoesSizes}
+                                  errorMessage={
+                                    form.errors?.variations &&
+                                    form.errors.variations[index]?.size &&
+                                    form.errors.variations[index].size
+                                  }
+                                />
+                              )}
+                            </>
+
                             
-                            <Input
-                              label='Tamanho'
-                              placeholder='Preencha o tamanho'
-                              onChange={form.handleChange}
-                              onBlur={form.handleBlur}
-                              value={form.values.variations[index].size}
-                              name={`variations.${index}.size`}
-                              errorMessage = {form.errors?.variations && form.errors.variations[index]?.size && form.errors.variations[index].size}
-                            />
-                            <div className=''>
-                              <label className='block uppercase tracking-wide text-gray-100 text-xs font-bold mb-2'>
-                                Voltagem
-                              </label>
-                              <div className='flex flex-row items-center justify-center my-2'>
-                                <Input.Checkbox
-                                  label={'120V'}
-                                  type='checkbox'
-                                  onChange={form.handleChange}
-                                  
-                                  name={`variations.${index}.voltage`}
-                                  value='120V'
-                                />
-                                <Input.Checkbox
-                                  label={'220V'}
-                                  type='checkbox'
-                                  onChange={form.handleChange}
-                                  
-                                  name={`variations.${index}.voltage`}
-                                  value='220V'
-                                />
-                                <Input.Checkbox
-                                  label={'Bivolt'}
-                                  type='checkbox'
-                                  onChange={form.handleChange}
-                                  name={`variations.${index}.voltage`}
-                                  value='Bivolt'
-                                />
-                              </div>
-                            </div>
-                            <div className='flex flex-row flex-wrap items-start justify-between h'>
-                              <Input
-                                label='SKU'
-                                placeholder='Preencha o SKU da variação'
-                                onChange={form.handleChange}
-                                onBlur={form.handleBlur}
-                                value={form.values.variations[index].sku}
-                                name={`variations.${index}.sku`}
-                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.sku && form.errors.variations[index].sku}
-                              />
-
-                              <Input
-                                label='Preço'
-                                placeholder='Preencha o preço da variação'
-                                onChange={form.handleChange}
-                                onBlur={form.handleBlur}
-                                value={form.values.variations[index].price}
-                                name={`variations.${index}.price`}
-                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.price && form.errors.variations[index].price}
-                              />
-
-                              <Input
-                                label='Peso'
-                                placeholder='Preencha o peso da variação'
-                                onChange={form.handleChange}
-                                onBlur={form.handleBlur}
-                                value={form.values.variations[index].weight}
-                                name={`variations.${index}.weight`}
-                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.weight && form.errors.variations[index].weight}
-                              />
-
-                              <Input
-                                label='Estoque'
-                                placeholder='Preencha o estoque da variação'
-                                onChange={form.handleChange}
-                                onBlur={form.handleBlur}
-                                value={form.values.variations[index].stock}
-                                name={`variations.${index}.stock`}
-                                errorMessage = {form.errors?.variations && form.errors.variations[index]?.stock && form.errors.variations[index].stock}
-                              />
-                            </div>
-                            { index > 0 &&
-                            <button
-                              type='button'
-                              className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400 absolute right-2 top-3'
-                              onClick={() => arrayHelpers.remove(index)}
-                            >
-                              X
-                            </button>}
+                            {index > 0 && (
+                              <button
+                                type='button'
+                                className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400 absolute right-2 top-3'
+                                onClick={() => arrayHelpers.remove(index)}
+                              >
+                                X
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -398,8 +496,14 @@ const CreateProduct = () => {
                   }}
                 />
               </FormikProvider>
-              <Button type='button' onClick={checkForErrors}>Criar produto</Button> 
-              <Modal type = {'create'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
+              <Button type='button' onClick={checkForErrors}>
+                Criar produto
+              </Button>
+              <Modal
+                type={'create'}
+                visible={modalVisible}
+                closeFunction={() => setModalVisible(false)}
+              />
             </form>
 
             {data && !!data.errors && (

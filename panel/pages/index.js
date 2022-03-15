@@ -52,11 +52,12 @@ const Index = () => {
     }
   }, [])
   return (
-    <div className='min-h-screen flex flex-col w-full bg-gray-200'>
-      <div className='container max-w-xs flex-1 mx-auto flex flex-col items-center justify-center px-2 '>
+    <div className='min-h-screen flex flex-col w-full bg-slate-900'>
+      <div className='container bg-slate-max-w-xs flex-1 mx-auto flex flex-col items-center justify-center px-2 '>
+        <h1 className ='text-white font-medium my-4'>Digite suas credenciais para acessar o painel administrativo</h1>
         <form
           onSubmit={form.handleSubmit}
-          className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'
+          className='bg-slate-700 shadow-md rounded px-8 pt-6 pb-8 mb-4'
         >
           <Input
             label='Email'

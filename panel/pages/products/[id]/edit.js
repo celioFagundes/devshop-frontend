@@ -9,6 +9,25 @@ import Button from '../../../components/Button'
 import Select from '../../../components/Select'
 import * as Yup from 'yup'
 import Modal from '../../../components/Modal'
+const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
+const shoesSizes = [
+  '31',
+  '32',
+  '33',
+  '34',
+  '35',
+  '36',
+  '37',
+  '38',
+  '39',
+  '40',
+  '41',
+  '42',
+  '43',
+  '44',
+  '45',
+  '46',
+]
 const validaSizeTypes = [
   { label: 'Roupas', id: 'clothes' },
   { label: 'Calçados', id: 'shoes' },
@@ -17,7 +36,7 @@ const validaSizeTypes = [
 let id = ''
 const UPDATE_PRODUCT = `
     mutation updateProduct($id: String!, $name: String!, $slug: String!,$description: String!, 
-      $category: String!, $brand: String!,$sizeType: String!,$variations: [VariationInput!]!) {
+      $category: String!, $brand: String!,$sizeType: String!,$voltage: [String!]!, $variations: [VariationInput!]!) {
         panelUpdateProduct (input: {
         id:$id,
         name:$name, 
@@ -26,6 +45,7 @@ const UPDATE_PRODUCT = `
         category: $category,
         brand:$brand,
         sizeType: $sizeType,
+        voltage: $voltage,
         variations: $variations
         }) {
         id
@@ -55,6 +75,7 @@ const ProductSchema = Yup.object().shape({
     .required('Por favor, informe um nome'),
   description: Yup.string()
     .min(20, 'Por favor, informe uma descrição com pelo menos 20 caracteres')
+    .max(250, 'Por favor, informe uma descrição com no máximo 250 caracteres')
     .required('Por favor, informe uma descrição'),
   category: Yup.string()
     .min(1, 'Por favor selecione uma categoria')
@@ -137,13 +158,13 @@ const EditProduct = () => {
           name
         }
         sizeType
+        voltage
         variations{
           color{
             colorName
             colorCode
           }
           size
-          voltage
           sku
           price
           weight
@@ -153,9 +174,9 @@ const EditProduct = () => {
 }`)
   const [updatedData, updateProduct] = useMutation(UPDATE_PRODUCT)
   const form = useFormik({
-    validateOnChange:false,
-    validateOnMount:true,
-    validateOnBlur:true,
+    validateOnChange: false,
+    validateOnMount: true,
+    validateOnBlur: true,
     initialValues: {
       name: '',
       slug: '',
@@ -163,13 +184,13 @@ const EditProduct = () => {
       category: '',
       brand: '',
       sizeType: '',
+      voltage: [],
       variations: [
         {
           color: {
             colorName: '',
             colorCode: '#000',
           },
-          voltage: [],
           size: '',
           sku: '',
           price: 0,
@@ -183,9 +204,9 @@ const EditProduct = () => {
       const product = {
         ...values,
         id: router.query.id,
+        voltage: [...form.values.voltage],
         variations: values.variations.map(variation => ({
           ...variation,
-          voltage: variation.voltage,
           price: Number(variation.price),
           weight: Number(variation.weight),
           stock: Number(variation.stock),
@@ -206,6 +227,7 @@ const EditProduct = () => {
       form.setFieldValue('category', data.getProductById.category.id)
       form.setFieldValue('brand', data.getProductById.brand.id)
       form.setFieldValue('sizeType', data.getProductById.sizeType)
+      form.setFieldValue('voltage', data.getProductById.voltage)
       form.setFieldValue('variations', data.getProductById.variations)
     }
   }, [data])
@@ -227,8 +249,8 @@ const EditProduct = () => {
       }
     })
   }
-  const checkForErrors = async() =>{
-    if(JSON.stringify(form.errors) === '{}'){
+  const checkForErrors = async () => {
+    if (JSON.stringify(form.errors) === '{}') {
       setModalVisible(true)
     }
   }
@@ -243,30 +265,29 @@ const EditProduct = () => {
           <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border border-gray-600 bg-gray-800 p-12'>
             <form onSubmit={form.handleSubmit}>
               <div className='flex flex-row flex-wrap items-start justify-start'>
-              <div className ='mb-2 sm:mb-0'>
-                <Input
-                  label='Nome do produto'
-                  placeholder='Preencha o nome do produto'
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  value={form.values.name}
-                  name='name'
-                  errorMessage={form.errors.name}
-                />
-                </div>
+                <div className='mb-2 sm:mb-0'>
                   <Input
-                    label='Slug do produto'
-                    placeholder='Preencha o slug do produto'
+                    label='Nome do produto'
+                    placeholder='Preencha o nome do produto'
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
-                    value={form.values.slug}
-                    name='slug'
-                    errorMessage={form.errors.slug}
-                    helpText='Slug é utilizado para criar URLs amigaveis'
+                    value={form.values.name}
+                    name='name'
+                    errorMessage={form.errors.name}
                   />
-                
+                </div>
+                <Input
+                  label='Slug do produto'
+                  placeholder='Preencha o slug do produto'
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  value={form.values.slug}
+                  name='slug'
+                  errorMessage={form.errors.slug}
+                  helpText='Slug é utilizado para criar URLs amigaveis'
+                />
               </div>
-              <div className='my-2'>
+              <div className='my-4'>
                 <Input.TextArea
                   label='Descrição do produto'
                   placeholder='Preencha a descrição do produto'
@@ -274,8 +295,10 @@ const EditProduct = () => {
                   onBlur={form.handleBlur}
                   value={form.values.description}
                   name='description'
+                  textLength={form.values.description.length}
                   errorMessage={form.errors.description}
                 />
+                
               </div>
               <div className='flex flex-row flex-wrap items center justify-start my-2'>
                 <Select
@@ -306,6 +329,49 @@ const EditProduct = () => {
                   errorMessage={form.errors.sizeType}
                 />
               </div>
+              <div>
+                <label className='block uppercase tracking-wide text-white text-xs font-bold mb-2 mt-2 md:mt-0'>
+                  Voltagem
+                </label>
+                <div className='flex flex-row  w-52  items-center justify-start my-2'>
+                  <Input.Checkbox
+                    label={'120V'}
+                    type='checkbox'
+                    checked={
+                      form.values.voltage &&
+                      form.values.voltage.indexOf('120V') >= 0
+                    }
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    name={'voltage'}
+                    value='120V'
+                  />
+                  <Input.Checkbox
+                    label={'220V'}
+                    type='checkbox'
+                    checked={
+                      form.values.voltage &&
+                      form.values.voltage.indexOf('220V') >= 0
+                    }
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    name={'voltage'}
+                    value='220V'
+                  />
+                  <Input.Checkbox
+                    label={'Bivolt'}
+                    type='checkbox'
+                    checked={
+                      form.values.voltage &&
+                      form.values.voltage.indexOf('Bivolt') >= 0
+                    }
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    name={'voltage'}
+                    value='Bivolt'
+                  />
+                </div>
+              </div>
               <FormikProvider value={form}>
                 <FieldArray
                   name='variations'
@@ -321,7 +387,6 @@ const EditProduct = () => {
                                   colorName: '',
                                   colorCode: '#000',
                                 },
-                                voltage: [],
                                 size: '',
                                 sku: '',
                                 price: 0,
@@ -375,66 +440,55 @@ const EditProduct = () => {
                                   name={`variations.${index}.color.colorCode`}
                                 />
                               </div>
+                              <>
+                                {form.values.sizeType === 'measures' && (
+                                  <Input
+                                    label='Tamanho'
+                                    placeholder='Preencha o tamanho'
+                                    onChange={form.handleChange}
+                                    onBlur={form.handleBlur}
+                                    value={form.values.variations[index].size}
+                                    name={`variations.${index}.size`}
+                                    errorMessage={
+                                      form.errors?.variations &&
+                                      form.errors.variations[index]?.size &&
+                                      form.errors.variations[index].size
+                                    }
+                                  />
+                                )}
 
-                              <Input
-                                label='Tamanho'
-                                placeholder='Preencha o tamanho'
-                                onChange={form.handleChange}
-                                onBlur={form.handleBlur}
-                                value={form.values.variations[index].size}
-                                name={`variations.${index}.size`}
-                                errorMessage={
-                                  form.errors?.variations &&
-                                  form.errors.variations[index]?.size &&
-                                  form.errors.variations[index].size
-                                }
-                              />
-                              <div>
-                                <label className='block uppercase tracking-wide text-white text-xs font-bold mb-2 mt-2 md:mt-0'>
-                                  Voltagem
-                                </label>
-                                <div className='flex flex-row items-center justify-center my-2'>
-                                  <Input.Checkbox
-                                    label={'120V'}
-                                    type='checkbox'
-                                    checked={
-                                      form.values.variations[
-                                        index
-                                      ].voltage.indexOf('120V') >= 0
-                                    }
+                                {form.values.sizeType === 'clothes' && (
+                                  <Select.SingleValues
+                                    label={'Tamanho'}
                                     onChange={form.handleChange}
                                     onBlur={form.handleBlur}
-                                    name={`variations.${index}.voltage`}
-                                    value='120V'
-                                  />
-                                  <Input.Checkbox
-                                    label={'220V'}
-                                    type='checkbox'
-                                    checked={
-                                      form.values.variations[
-                                        index
-                                      ].voltage.indexOf('220V') >= 0
+                                    name={`variations.${index}.size`}
+                                    value={form.values.variations[index].size}
+                                    options={clothesSizes}
+                                    errorMessage={
+                                      form.errors?.variations &&
+                                      form.errors.variations[index]?.size &&
+                                      form.errors.variations[index].size
                                     }
+                                  />
+                                )}
+                                {form.values.sizeType === 'shoes' && (
+                                  <Select.SingleValues
+                                    label={'Tamanho'}
                                     onChange={form.handleChange}
                                     onBlur={form.handleBlur}
-                                    name={`variations.${index}.voltage`}
-                                    value='220V'
-                                  />
-                                  <Input.Checkbox
-                                    label={'Bivolt'}
-                                    type='checkbox'
-                                    checked={
-                                      form.values.variations[
-                                        index
-                                      ].voltage.indexOf('Bivolt') >= 0
+                                    name={`variations.${index}.size`}
+                                    value={form.values.variations[index].size}
+                                    options={shoesSizes}
+                                    errorMessage={
+                                      form.errors?.variations &&
+                                      form.errors.variations[index]?.size &&
+                                      form.errors.variations[index].size
                                     }
-                                    onChange={form.handleChange}
-                                    onBlur={form.handleBlur}
-                                    name={`variations.${index}.voltage`}
-                                    value='Bivolt'
                                   />
-                                </div>
-                              </div>
+                                )}
+                              </>
+
                               <div className='flex flex-row flex-wrap items-start justify-between h'>
                                 <Input
                                   label='SKU'
@@ -508,8 +562,14 @@ const EditProduct = () => {
                   }}
                 />
               </FormikProvider>
-              <Button type='button' onClick={checkForErrors}>Salvar alterações</Button> 
-              <Modal type = {'edit'}  visible = {modalVisible} closeFunction = {() => setModalVisible(false)}/>
+              <Button type='button' onClick={checkForErrors}>
+                Salvar alterações
+              </Button>
+              <Modal
+                type={'edit'}
+                visible={modalVisible}
+                closeFunction={() => setModalVisible(false)}
+              />
             </form>
 
             {data && !!data.errors && (

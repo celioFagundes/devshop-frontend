@@ -94,13 +94,15 @@ const InputTextArea = ({
   label = '',
   value,
   onChange,
+  onBlur,
   name = '',
   helpText,
   errorMessage = '',
   disabled,
+  textLength
 }) => {
   return (
-    <div className='w-full mb-1 mr-2 max-w-sm '>
+    <div className=' mb-1 mr-2 max-w-sm relative'>
       <label
         className='block uppercase tracking-wide  text-gray-100 text-xs font-bold mb-2'
         htmlFor={name && 'id-' + name }
@@ -109,13 +111,15 @@ const InputTextArea = ({
       </label>
       <textarea
         disabled={disabled}
-        className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3  leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
+        className='appearance-none h-52 block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3  leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
         id={'id-' + name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onBlur = {onBlur}
         name={name}
       />
+      <p className=' text-blue-400 font-medium'> {textLength}</p>
       {errorMessage && (
         <p className='text-red-500 text-xs italic'>{errorMessage}</p>
       )}
