@@ -4,7 +4,8 @@ import Layout from '../../components/Layout'
 import { fetcher } from '../../lib/graphql'
 import { useEffect } from 'react/cjs/react.development'
 import { useCart } from '../../lib/CartContext'
-import SlickCarousel from '../../components/SlickCarousel/SlickCarousel'
+import EmblaCarousel from '../../components/SlickCarousel/Carousel'
+
 const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
 const shoesSizes = [
   '31',
@@ -34,6 +35,15 @@ const GET_ALL_CATEGORIES = gql`
     }
   }
 `
+const GET_ALL_BRANDS = gql`
+  query {
+    brands: getAllBrands {
+      id
+      name
+      slug
+    }
+  }
+`
 const GET_PRODUCT_BY_SLUG = gql`
   query getProductBySLug($slug: String!) {
     product: getProductBySlug(slug: $slug) {
@@ -43,6 +53,10 @@ const GET_PRODUCT_BY_SLUG = gql`
       description
       images
       sizeType
+      voltage
+      brand {
+        name
+      }
       variations {
         color {
           colorName
@@ -50,7 +64,6 @@ const GET_PRODUCT_BY_SLUG = gql`
         }
         size
         sku
-        voltage
         price
         stock
         weight
@@ -58,11 +71,11 @@ const GET_PRODUCT_BY_SLUG = gql`
     }
   }
 `
-const Products = ({ product, categories }) => {
+const Products = ({ product, categories, brands }) => {
   const cart = useCart()
   const [colorSelected, setColorSelected] = useState('')
   const [sizeSelected, setSizeSelected] = useState('')
-  const [voltageSelected, setVoltage] = useState('')
+  const [voltageSelected, setVoltageSelected] = useState('')
   const [availableSizes, setAvailableSizes] = useState([])
   const [selectedVariation, setSelectedVariation] = useState(
     product.variations[0],
@@ -118,24 +131,26 @@ const Products = ({ product, categories }) => {
   }
 
   return (
-    <Layout categories={categories}>
-      <div className='container px-5 py-24 mx-auto'>
+    <Layout categories={categories} brands={brands}>
+      <div className='container   text-center sm:text-left lg:px-5 py-10 mx-auto'>
         <div className='flex flex-wrap '>
-          <div className='lg:w-1/2'><SlickCarousel images = {product.images}/></div> 
-          <div className='lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0'>
+          <div className='w-full lg:w-1/2'>
+            <EmblaCarousel slides={product.images} />
+          </div>
+          <div className='lg:w-1/2 w-full lg:pl-10 lg:py-2  mt-6 lg:mt-0 border-b-2 border-gray-200'>
             <h2 className='text-sm title-font text-gray-500 tracking-widest'>
-              BRAND NAME
+              {product.brand.name}
             </h2>
             <h1 className='text-gray-900 text-3xl title-font font-medium mb-1'>
               {product.name}
             </h1>
-            <p className='leading-relaxed'>{product.description}</p>
-            <div className=' mt-6 items-center pb-5 border-b-2 border-gray-100 my-5'>
+            <p className='break-words'>{product.description}</p>
+            <div className=' mt-2 items-center '>
               <div className='my-2'>
                 <p className='title-font  font-medium text-lg text-gray-900'>
                   Cor
                 </p>
-                <div className='flex items-center'>
+                <div className='flex items-center justify-center sm:justify-start'>
                   {Object.keys(possibleColors).map(item => (
                     <div
                       className='flex flex-col '
@@ -218,38 +233,34 @@ const Products = ({ product, categories }) => {
                   <div className='relative'>{selectedVariation.size}</div>
                 )}
                 <pre>{/*JSON.stringify(selectedVariation,null,2)*/}</pre>
-                {selectedVariation &&
-                  selectedVariation.voltage &&
-                  selectedVariation.voltage.length > 0 && (
-                    <div className='flex flex-col my-2'>
-                      <span className='title-font  font-medium text-lg text-gray-900'>
-                        Voltagem
-                      </span>
-                      <div className='relative'>
-                        {selectedVariation.voltage.map(size => (
-                          <button
-                            key={size}
-                            onClick={() =>
-                              sizeIsAvailable(size) && setSizeSelected(size)
-                            }
-                            className={`mr-2 my-1 ${
-                              sizeIsAvailable(size)
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-100 text-blue-400 before:'
-                            } ${
-                              selectedVariation &&
-                              selectedVariation.size === size &&
-                              'border-2 border-red-300 rounded'
-                            } py-2 px-2 rounded  font-bold text-xs`}
-                          >
-                            {size}
-                          </button>
-                        ))}
-                      </div>
+                {product && product.voltage && product.voltage.length > 0 && (
+                  <div className='flex flex-col my-2'>
+                    <span className='title-font  font-medium text-lg text-gray-900'>
+                      Voltagem
+                    </span>
+                    {voltageSelected}
+                    <div className='relative'>
+                      {product.voltage.map(volt => (
+                        <button
+                          onClick={() => setVoltageSelected(volt)}
+                          key={volt}
+                          className={`${
+                            voltageSelected === volt
+                              ? 'border-2 border-orange-500 rounded'
+                              : 'border-2 border-orange-300 rounded'
+                          }
+                          mr-2 my-1  
+                              
+                             py-2 px-2 rounded  font-bold text-xs`}
+                        >
+                          {volt}
+                        </button>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
               </div>
-              <div className='flex'>
+              <div className='flex justify-center sm:justify-start'>
                 <p className='mr-3 title-font  font-medium text-base text-black'>
                   Peso:{' '}
                   <span className='font-light'>
@@ -264,23 +275,32 @@ const Products = ({ product, categories }) => {
                 </p>
               </div>
             </div>
-            <div className='flex my-2'>
+            <div className='flex flex-col sm:flex-row my-2 '>
               <p className='title-font font-medium  text-4xl text-gray-900'>
                 R$ {selectedVariation && selectedVariation.price}
               </p>
-              <button
-                onClick={() => cart.addToCart(product, selectedVariation)}
-                className='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
-              >
-                Adicionar ao carrinho
-              </button>
+              {Object.keys(cart.items).includes(
+                product.name + selectedVariation.sku + voltageSelected,
+              ) ? (
+                <button
+                  onClick={() =>
+                    cart.removeFromCart(product, selectedVariation, voltageSelected)
+                  }
+                  className='w-full sm:w-60 text-center my-3 sm:my-0 ml-auto text-white bg-indigo-400 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
+                >
+                  Remover do carrinho
+                </button>
+              ) : (
+                <button
+                  onClick={() =>
+                    cart.addToCart(product, selectedVariation, voltageSelected)
+                  }
+                  className='w-full sm:w-60 text-center my-3 sm:my-0 ml-auto text-white bg-indigo-600 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
+                >
+                  Adicionar ao carrinho
+                </button>
+              )}
             </div>
-            <button
-              onClick={() => cart.removeFromCart(product, selectedVariation)}
-              className='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
-            >
-              Remover do carrinho
-            </button>
           </div>
         </div>
       </div>
@@ -292,11 +312,13 @@ export async function getServerSideProps(context) {
     slug: context.query.slug,
   })
   const { categories } = await fetcher(GET_ALL_CATEGORIES)
+  const { brands } = await fetcher(GET_ALL_BRANDS)
 
   return {
     props: {
       product,
       categories,
+      brands,
     },
   }
 }
