@@ -46,7 +46,7 @@ const ProductsByCategory = ({ products, categories , brands, categoria}) => {
           <div className='flex flex-wrap -m-4'>
             {products?.length === 0 && <p>Sem produtos para esta categoria</p>}
             {products?.map(product => (
-              <CardProduct product = {product}/>
+              <CardProduct product = {product} key = {product.id}/>
             ))}
           </div>
         </div>

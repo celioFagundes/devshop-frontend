@@ -3,7 +3,7 @@ import Layout from '../components/Layout'
 import { fetcher } from '../lib/graphql'
 import Link from 'next/link'
 import { useCart } from '../lib/CartContext'
-import { AiFillCreditCard, AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai'
+import { AiFillCreditCard, AiOutlinePlus, AiOutlineMinus , AiOutlineShoppingCart} from 'react-icons/ai'
 
 const GET_ALL_CATEGORIES = gql`
   query {
@@ -29,43 +29,44 @@ const Cart = ({ categories, brands }) => {
   
   return (
     <Layout categories={categories} brands={brands}>
-      <div class='flex justify-center my-6'>
-        <div class='flex flex-col w-full p-8 text-gray-800 bg-white shadow-lg pin-r pin-y md:w-4/5 lg:w-4/5'>
-          <div class='flex-1'>
-            <table class='w-full text-sm lg:text-base' cellspacing='0'>
+      <div className='flex justify-center my-6'>
+        {Object.keys(cart.items).length > 0 &&
+        <div className='flex flex-col w-full p-8 text-gray-800 bg-white shadow-lg pin-r pin-y md:w-4/5 lg:w-4/5'>
+          <div className='flex-1'>
+            <table className='w-full text-sm lg:text-base'>
               <thead>
-                <tr class='h-12 uppercase'>
-                  <th class='hidden md:table-cell'></th>
-                  <th class='text-left'>Produto</th>
-                  <th class='lg:text-right text-left pl-5 lg:pl-0'>
-                    <span class='lg:hidden' title='Quantity'>
+                <tr className='h-12 uppercase'>
+                  <th className='hidden md:table-cell'></th>
+                  <th className='text-left'>Produto</th>
+                  <th className='lg:text-right text-left pl-5 lg:pl-0'>
+                    <span className='lg:hidden' title='Quantity'>
                       Qtd
                     </span>
-                    <span class='hidden lg:inline'>Quantidade</span>
+                    <span className='hidden lg:inline'>Quantidade</span>
                   </th>
-                  <th class='hidden text-right md:table-cell'>
+                  <th className='hidden text-right md:table-cell'>
                     Preço unitário
                   </th>
-                  <th class='text-right'>Preço total</th>
+                  <th className='text-right'>Preço total</th>
                 </tr>
               </thead>
               <tbody>
                 {Object.keys(cart.items).map(item => (
-                  <tr>
-                    <td class='hidden pb-4 md:table-cell'>
+                  <tr key ={item}>
+                    <td className='hidden pb-4 md:table-cell'>
                       <a href='#'>
                         {cart.items &&
                         cart.items[item].images &&
                         cart.items[item].images.length > 0 ? (
                           <img
                             src={cart.items[item].images[0]}
-                            class='w-20 rounded'
+                            className='w-20 rounded'
                             alt='Thumbnail'
                           />
                         ) : (
                           <img
                             src='https://dummyimage.com/420x260'
-                            class='w-20 rounded'
+                            className='w-20 rounded'
                             alt='Thumbnail'
                           />
                         )}
@@ -94,14 +95,14 @@ const Cart = ({ categories, brands }) => {
                         )}
                       </div>
                       <div>
-                        <button type='submit' class='text-gray-700' onClick={() => cart.removeFromCart(item)}>
+                        <button type='submit' className='text-gray-700' onClick={() => cart.removeFromCart(item)}>
                           <small>(Remover item)</small>
                         </button>
                       </div>
                     </td>
-                    <td class='justify-center md:justify-end md:flex mt-6'>
-                      <div class='w-20 h-10'>
-                        <div class='relative flex flex-row w-full h-8'>
+                    <td className='justify-center md:justify-end md:flex mt-6'>
+                      <div className='w-20 h-10'>
+                        <div className='relative flex flex-row w-full h-8'>
                           <div className='flex flex-row justify-center  items-center '>
                             <button
                               className=''
@@ -113,7 +114,6 @@ const Cart = ({ categories, brands }) => {
                               {cart.items[item].qtd}
                             </p>
                             <button
-                              className=''
                               onClick={() => cart.removeOne(item)}
                             >
                               <AiOutlineMinus color='#000' />
@@ -122,16 +122,16 @@ const Cart = ({ categories, brands }) => {
                         </div>
                       </div>
                     </td>
-                    <td class='hidden text-right md:table-cell'>
-                      <span class='text-sm lg:text-base font-medium'>
+                    <td className='hidden text-right md:table-cell'>
+                      <span className='text-sm lg:text-base font-medium'>
                         R${' '}
                         {cart.items[item].variation.price.toLocaleString(
                           'pt-br',
                         )}
                       </span>
                     </td>
-                    <td class='text-right'>
-                      <span class='text-sm lg:text-base font-medium'>
+                    <td className='text-right'>
+                      <span className='text-sm lg:text-base font-medium'>
                         R${' '}
                         {(
                           cart.items[item].variation.price *
@@ -143,32 +143,39 @@ const Cart = ({ categories, brands }) => {
                 ))}
               </tbody>
             </table>
-            <div class='my-4 mt-6 -mx-2 lg:flex'>
-              <div class='lg:px-2 lg:w-1/2'></div>
-              <div class='lg:px-2 lg:w-1/2'>
-                <div class='p-4 bg-gray-100 rounded-full'>
-                  <h1 class='ml-2 font-bold uppercase'>Detalhes do pedido</h1>
+            <div className='my-4 mt-6 -mx-2 lg:flex'>
+              <div className='lg:px-2 lg:w-1/2'></div>
+              <div className='lg:px-2 lg:w-1/2'>
+                <div className='p-4 bg-gray-100 rounded-full'>
+                  <h1 className='ml-2 font-bold uppercase'>Detalhes do pedido</h1>
                 </div>
-                <div class='p-4'>
-                  <div class='flex justify-between pt-4 border-b'>
-                    <div class='lg:px-4 lg:py-2 m-2 text-lg lg:text-xl font-bold text-center text-gray-800'>
+                <div className='p-4'>
+                  <div className='flex justify-between pt-4 border-b'>
+                    <div className='lg:px-4 lg:py-2 m-2 text-lg lg:text-xl font-bold text-center text-gray-800'>
                       Total
                     </div>
-                    <div class='lg:px-4 lg:py-2 m-2 lg:text-lg font-bold text-center text-gray-900'>
-                      R$ {cart.cartTotal}
+                    <div className='lg:px-4 lg:py-2 m-2 lg:text-lg font-bold text-center text-gray-900'>
+                      R$ {cart.cartTotal.toLocaleString('pt-br')}
                     </div>
                   </div>
                   <a href='#'>
-                    <button class='flex justify-center items-center w-full px-10 py-3 mt-6 font-medium text-white uppercase bg-gray-800 rounded-full shadow item-center hover:bg-gray-700 focus:shadow-outline focus:outline-none'>
+                    <button className='flex justify-center items-center w-full px-10 py-3 mt-6 font-medium text-white uppercase bg-gray-800 rounded-full shadow item-center hover:bg-gray-700 focus:shadow-outline focus:outline-none'>
                       <AiFillCreditCard size={28} />
-                      <span class='ml-2 mt-5px'>Fazer checkout</span>
+                      <span className='ml-2 mt-5px'>Fazer checkout</span>
                     </button>
                   </a>
                 </div>
               </div>
             </div>
           </div>
+        </div>}
+        {Object.keys(cart.items).length === 0 &&
+        <div className='flex flex-col justify-center items-center'>
+          <AiOutlineShoppingCart size={140}/>
+          <p className='text-2xl font-medium'>Seu carrinho esta vazio no momento</p>
         </div>
+          
+        }
       </div>
     </Layout>
   )

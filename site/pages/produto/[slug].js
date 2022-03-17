@@ -4,7 +4,7 @@ import Layout from '../../components/Layout'
 import { fetcher } from '../../lib/graphql'
 import { useEffect } from 'react/cjs/react.development'
 import { useCart } from '../../lib/CartContext'
-import EmblaCarousel from '../../components/SlickCarousel/Carousel'
+import EmblaCarousel from '../../components/Carousel/Carousel'
 
 const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
 const shoesSizes = [
@@ -76,7 +76,7 @@ const Products = ({ product, categories, brands }) => {
   const [colorSelected, setColorSelected] = useState('')
   const [sizeSelected, setSizeSelected] = useState('')
   const [voltageSelected, setVoltageSelected] = useState('')
-  const [availableSizes, setAvailableSizes] = useState([])
+  const [availableSizesForColor, setAvailableSizes] = useState([])
   const [selectedVariation, setSelectedVariation] = useState(
     product.variations[0],
   )
@@ -90,48 +90,68 @@ const Products = ({ product, categories, brands }) => {
     }),
     {},
   )
-  useEffect(() => {
+
+  const sizeIsAvailable = size => {
+    return availableSizesForColor.indexOf(size) >= 0
+  }
+  const filterSizes = sizes => {
+    const allSizes = sizes.map(item => item.size)
+    const sizesFilter = [...new Set(allSizes.map(s => s))]
+    setAvailableSizes(sizesFilter)
+  }
+
+  const updateAvailableSizes = () => {
     const available = product.variations.filter(
       prod => prod.color.colorName === colorSelected,
     )
-    const sizes = available.map(item => item.size)
-    const sizesFilter = [...new Set(sizes.map(s => s))]
-    setAvailableSizes(sizesFilter)
-  }, [colorSelected])
-  useEffect(() => {
-    const newSelected2 = product.variations
+    filterSizes(available)
+  }
+  const setFirstAvailabledVariation = () => {
+    const firstAvailableVariation = product.variations
       .filter(item => item.color.colorName === colorSelected)
-      .filter(item => item.size === availableSizes[0])
-    setSelectedVariation(newSelected2[0])
-  }, [availableSizes])
+      .filter(item => item.size === availableSizesForColor[0])
+    setSelectedVariation(firstAvailableVariation[0])
+  }
+  const updateSelectedVariation = () => {
+    const newSelected = product.variations
+      .filter(item => item.color.colorName === colorSelected)
+      .filter(item => item.size === sizeSelected)
+    setSelectedVariation(newSelected[0])
+  }
+  const initialVariationAvailableSizes = () =>{
+    const available = product.variations.filter(
+      prod => prod.color.colorName === product.variations[0].color.colorName,
+    )
+    filterSizes(available)
+  }
+  const initialSelectedVariation = () => {
+    setSelectedVariation(product.variations[0])
+    setColorSelected(product.variations[0].color.colorName)
+    initialVariationAvailableSizes()
+  }
+  useEffect(() => {
+    updateAvailableSizes()
+  }, [colorSelected])
 
   useEffect(() => {
-    if (product.variations[0]) {
-      setSelectedVariation(product.variations[0])
-      setColorSelected(product.variations[0].color.colorName)
-      const available = product.variations.filter(
-        prod => prod.color.colorName === product.variations[0].color.colorName,
-      )
-      const sizes = available.map(item => item.size)
-      const sizesFilter = [...new Set(sizes.map(s => s))]
-      setAvailableSizes(sizesFilter)
-    }
-  }, [product])
+    setFirstAvailabledVariation()
+  }, [availableSizesForColor])
+
   useEffect(() => {
     if (colorSelected !== '' && sizeSelected !== '') {
-      const newSelected = product.variations
-        .filter(item => item.color.colorName === colorSelected)
-        .filter(item => item.size === sizeSelected)
-      setSelectedVariation(newSelected[0])
+      updateSelectedVariation()
     }
   }, [colorSelected, sizeSelected])
 
-  const sizeIsAvailable = size => {
-    return availableSizes.indexOf(size) >= 0
-  }
+  useEffect(() => {
+    if (product.variations[0]) {
+      initialSelectedVariation()
+    }
+  }, [product])
 
   return (
     <Layout categories={categories} brands={brands}>
+      {selectedVariation &&
       <div className='container   text-center sm:text-left lg:px-5 py-10 mx-auto'>
         <div className='flex flex-wrap '>
           <div className='w-full lg:w-1/2'>
@@ -235,9 +255,8 @@ const Products = ({ product, categories, brands }) => {
                 {product && product.voltage && product.voltage.length > 0 && (
                   <div className='flex flex-col my-2'>
                     <span className='title-font  font-medium text-lg text-gray-900'>
-                      Voltagem
+                      Tensão elétrica:
                     </span>
-                    {voltageSelected}
                     <div className='relative'>
                       {product.voltage.map(volt => (
                         <button
@@ -256,6 +275,11 @@ const Products = ({ product, categories, brands }) => {
                         </button>
                       ))}
                     </div>
+                    {voltageSelected === '' && (
+                      <p className='text-sm font-medium text-yellow-700'>
+                        Por favor, escolhe a tensão elétrica
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -279,7 +303,7 @@ const Products = ({ product, categories, brands }) => {
                 R$ {selectedVariation && selectedVariation.price}
               </p>
               {Object.keys(cart.items).includes(
-                 selectedVariation.sku + voltageSelected,
+                selectedVariation.sku + voltageSelected,
               ) ? (
                 <button
                   onClick={() =>
@@ -292,17 +316,26 @@ const Products = ({ product, categories, brands }) => {
               ) : (
                 <button
                   onClick={() =>
-                    cart.addToCart(product,selectedVariation, voltageSelected)
+                    cart.addToCart(product, selectedVariation, voltageSelected)
+                  }
+                  disabled={
+                    product &&
+                    product.voltage.length > 0 &&
+                    voltageSelected === ''
                   }
                   className='w-full sm:w-60 text-center my-3 sm:my-0 ml-auto text-white bg-indigo-600 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
                 >
-                  Adicionar ao carrinho
+                  {product &&
+                  product.voltage.length > 0 &&
+                  voltageSelected === ''
+                    ? 'Selecione a tensão eletrica'
+                    : 'Adicionar ao carrinho'}
                 </button>
               )}
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </Layout>
   )
 }

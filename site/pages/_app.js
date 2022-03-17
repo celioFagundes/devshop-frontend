@@ -1,9 +1,10 @@
-import React from 'react'
+import { useEffect } from 'react'
 import '../css/styles.css'
 import { CartProvider } from '../lib/CartContext'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
-import '../components/SlickCarousel/carousel.css'
+import '../components/Carousel/carousel.css'
+
+
+
 const App = ({ Component, pageProps }) => {
   return (
     <CartProvider>

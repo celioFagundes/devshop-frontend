@@ -1,4 +1,3 @@
-import React from 'react'
 import { RiShoppingBag3Fill } from 'react-icons/ri'
 
 const Footer = () => {

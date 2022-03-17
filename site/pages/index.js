@@ -5,12 +5,14 @@ import { gql } from 'graphql-request'
 import Brands from '../components/Home/Brands'
 import Products from '../components/Home/Products'
 import Link from 'next/link'
+
 const GET_ALL_PRODUCTS = gql`
   query {
     products: getAllProducts {
       id
       name
       slug
+      voltage
       variations{
         price
       }
@@ -63,6 +65,7 @@ export async function getServerSideProps(context) {
   const { brands } = await fetcher(GET_ALL_BRANDS)
   const { categories } = await fetcher(GET_ALL_CATEGORIES)
   const { products } = await fetcher(GET_ALL_PRODUCTS)
+  
   return {
     props: {
       brands,

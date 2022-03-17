@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState} from 'react'
 import Link from 'next/link'
 import { RiShoppingBag3Fill } from 'react-icons/ri'
-import { AiOutlineCaretDown, AiOutlineShoppingCart } from 'react-icons/ai'
+import { AiOutlineCaretDown} from 'react-icons/ai'
 import { useCart } from '../../lib/CartContext'
 import CartPreview from '../CartPreview'
 
@@ -28,7 +28,9 @@ const Header = ({ categories, brands }) => {
               <div className='bg-blue-500 px-2 py-2 rounded-full'>
                 <RiShoppingBag3Fill color='#fff' size={22} />
               </div>
-              <span className='ml-3  text-xl md:text-3xl text-white'>DevShop</span>
+              <span className='ml-3  text-xl md:text-3xl text-white'>
+                DevShop
+              </span>
             </a>
           </Link>
 
@@ -39,7 +41,11 @@ const Header = ({ categories, brands }) => {
                 className='rounded-lg text-sm px-2 md:px-4 font-medium uppercase text-center inline-flex items-center hover:text-gray-300'
                 type='button'
               >
-                Categorias <AiOutlineCaretDown size={12} className='hidden xs:block ml-1' />
+                Categorias{' '}
+                <AiOutlineCaretDown
+                  size={12}
+                  className='hidden xs:block ml-1'
+                />
               </button>
               <div
                 className={`${
@@ -49,7 +55,7 @@ const Header = ({ categories, brands }) => {
                 <ul className='flex flex-wrap flex-row w-full py-3'>
                   {categories?.map(category => (
                     <li
-                    className='sm:w-full  hover:bg-blue-100 px-4 hover:cursor-pointer'
+                      className='sm:w-full  hover:bg-blue-100 px-4 hover:cursor-pointer'
                       key={category.id}
                       onClick={() => setMenuCategories(false)}
                     >
@@ -69,7 +75,11 @@ const Header = ({ categories, brands }) => {
                 className='rounded-lg text-sm px-1 md:px-4 font-medium uppercase  text-center inline-flex items-center hover:text-gray-300'
                 type='button'
               >
-                Marcas <AiOutlineCaretDown size={12} className='ml-1 hidden xs:block' />
+                Marcas{' '}
+                <AiOutlineCaretDown
+                  size={12}
+                  className='ml-1 hidden xs:block'
+                />
               </button>
               <div
                 className={`${
@@ -95,29 +105,7 @@ const Header = ({ categories, brands }) => {
             </div>
           </nav>
         </div>
-        <div
-          onClick={() => setCartOpen(!cartOpen)}
-          className='bg-blue-100 text-blue-900 px-2 py-2 rounded-full hover:bg-blue-300 hover:text-white hover:cursor-pointer relative'
-        >
-          <AiOutlineShoppingCart />
-          {cart && cart.cartSize > 0 &&
-          <div
-            className='absolute bottom-5 -right-1 bg-orange-400 text-xs text-white'
-            style={{
-              height: '15px',
-              width: '15px',
-              textAlign: 'center',
-              display:'flex',
-              justifyContent:'center',
-              alignItems:'center',
-              padding:'10px',
-              borderRadius: '50%',
-            }}
-          >
-            <span>{cart && cart.cartSize}</span>
-          </div>}
-        </div>
-        {cartOpen && <CartPreview items={cart.items} addOne = {cart.addOne} removeOne = {cart.removeOne} closeCart = {() => setCartOpen(false)} />}
+      <CartPreview />
       </div>
     </header>
   )

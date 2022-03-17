@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import React from 'react'
-
 const Brands = ({ brands }) => {
   return (
     <section className='text-gray-600 body-font bg-white shadow-sm'>

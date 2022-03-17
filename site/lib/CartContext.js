@@ -12,21 +12,23 @@ export const CartProvider = ({ children }) => {
   }, [])
 
   const addOne = id => {
+    const currentCart = JSON.parse(localStorage.getItem('cart'))
     setItems(current => {
-      const newCart = { ...current }
-      if (current[id]) {
-        current[id].qtd++
+      const newCart = { ...currentCart }
+      if (currentCart[id]) {
+        currentCart[id].qtd++
       }
       localStorage.setItem('cart', JSON.stringify(newCart))
       return newCart
     })
   }
   const removeOne = id => {
-    const variation = items[id]
+    const currentCart = JSON.parse(localStorage.getItem('cart'))
+    const variation = currentCart[id]
     if (variation) {
       if (variation.qtd > 0) {
         setItems(current => {
-          const newCart = { ...current }
+          const newCart = { ...currentCart }
           newCart[id].qtd--
           localStorage.setItem('cart', JSON.stringify(newCart))
           if (newCart[id].qtd === 0) {
@@ -41,8 +43,9 @@ export const CartProvider = ({ children }) => {
   }
   const addToCart = (product, selectedVariation,voltage) => {
     const variationId = selectedVariation.sku + voltage
+    const currentCart = JSON.parse(localStorage.getItem('cart'))
     setItems(current => {
-      const newCart = { ...current }
+      const newCart = { ...currentCart }
       newCart[variationId] = {
         id: product.id,
         name: product.name,
@@ -60,12 +63,12 @@ export const CartProvider = ({ children }) => {
   }
   const removeFromCart = (selectedVariationSKU, voltage ) => {
     const variationId = voltage ? selectedVariationSKU + voltage : selectedVariationSKU
-    console.log(variationId)
     const variation = items[variationId]
+    const currentCart = JSON.parse(localStorage.getItem('cart'))
     if (variation) {
       if (variation.qtd > 0) {
         setItems(current => {
-          const { [variationId]: etc, ...newCart2 } = current
+          const { [variationId]: etc, ...newCart2 } = currentCart
           localStorage.setItem('cart', JSON.stringify(newCart2))
           return newCart2
         })
