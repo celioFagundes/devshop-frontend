@@ -5,6 +5,7 @@ import { gql } from 'graphql-request'
 import Brands from '../components/Home/Brands'
 import Products from '../components/Home/Products'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const GET_ALL_PRODUCTS = gql`
   query {
@@ -13,7 +14,7 @@ const GET_ALL_PRODUCTS = gql`
       name
       slug
       voltage
-      variations{
+      variations {
         price
       }
       brand {
@@ -43,18 +44,24 @@ const GET_ALL_CATEGORIES = gql`
     }
   }
 `
-const Index = ({ brands, categories , products}) => {
+const Index = ({ brands, categories, products }) => {
   return (
     <>
       <Layout categories={categories} brands={brands}>
         <Seo />
         <Link href='/categoria/smartphones'>
-        <a className='w-full'>
-          <img className ='shadow-sm' src='/images/banner-home2.png' />
-        </a>
+          <div>
+          <Image
+            alt='link para categoria smartphone'
+            src={'/images/banner.webp'}
+            layout='responsive'
+            width={1250}
+            height={313}
+            priority
+          />
+          </div>
         </Link>
-        
-        <Products products = {products}/>
+        <Products products={products} />
         <Brands brands={brands} />
       </Layout>
     </>
@@ -65,13 +72,12 @@ export async function getServerSideProps(context) {
   const { brands } = await fetcher(GET_ALL_BRANDS)
   const { categories } = await fetcher(GET_ALL_CATEGORIES)
   const { products } = await fetcher(GET_ALL_PRODUCTS)
-  
+
   return {
     props: {
       brands,
       categories,
-      products
-      
+      products,
     },
   }
 }
