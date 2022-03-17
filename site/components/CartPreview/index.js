@@ -38,7 +38,7 @@ const CartPreview = () => {
       window.removeEventListener('focus', onFocus)
       window.removeEventListener('blur', onBlur)
     }
-  }, [])
+  },[])
   return (
     <div>
       <div

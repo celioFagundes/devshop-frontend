@@ -63,10 +63,13 @@ export const CartProvider = ({ children }) => {
   }
   const removeFromCart = (selectedVariationSKU, voltage ) => {
     const variationId = voltage ? selectedVariationSKU + voltage : selectedVariationSKU
-    const variation = items[variationId]
     const currentCart = JSON.parse(localStorage.getItem('cart'))
+    const variation = currentCart[variationId]
+    console.log('chamou no context', variation)
     if (variation) {
+      console.log('achou variation')
       if (variation.qtd > 0) {
+        console.log('passou')
         setItems(current => {
           const { [variationId]: etc, ...newCart2 } = currentCart
           localStorage.setItem('cart', JSON.stringify(newCart2))
