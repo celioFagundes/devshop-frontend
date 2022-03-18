@@ -40,6 +40,10 @@ Possui duas formas de controlar o carrinho, através do cabeçalho pelo componen
 - [Embla Carousel](https://www.embla-carousel.com/)
 - [Sharp](https://github.com/lovell/sharp)
 
+### Desempenho
+- Responsividade em dispostivos movéis
+- Otimização feita com base nas recomendações do Google Lighthouse 
+
 ## Paginas
 ### Pagina inicial do DevShop
 Visualização e navegação apra os produtos, marcas e categorias cadastradas no banco de dados
