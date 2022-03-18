@@ -15,17 +15,16 @@
     - Acesse o repositório do Painel administrativo do DevShop [Painel Administrativo](https://github.com/celioFagundes/devshop-frontend/tree/master/panel).
 
 ### Sobre o site DevShop
- Desenvolvido com NextJs e GraphQL, consiste na exibição dos produtos,categorias e e marcas cadastradas banco de dados Postgres atraves do painel administrativo. Permite a visualização de todos os produtos cadastrados na página inicial, exibição dos produtos filtrados pela categoria ou marca na página de categoria/marca associada e a
- exibição do produto na página de detalhes do produto, onde é exibido todas as imagens e é feita a seleção da cor, tamanho e voltagem do produto e o mesmo pode ser adicionado/removido ao carrinho. Possui duas formas de controlar o carrinho, através do cabeçalho pelo componente CartPreview, onde é possivel a alteração de quantidade do produto e navegação para a página do produto, ou pela página do carrinho , onde é mostrado todos  os produtos existentes no carrinho  e os detalhes sobre o preço dos produtos e preço total.
+   Desenvolvido com NextJs e GraphQL, consiste na exibição dos produtos,categorias e e marcas cadastradas no banco de dados Postgres atraves do painel administrativo.    Permite a visualização de todos os produtos cadastrados na página inicial, exibição dos produtos filtrados pela categoria ou marca na página de categoria/marca associada e a exibição do produto na página de detalhes do produto, onde é exibido todas as imagens e é feita a seleção da cor, tamanho e voltagem do produto e o mesmo pode ser adicionado/removido ao carrinho. Possui duas formas de controlar o carrinho, através do cabeçalho pelo componente CartPreview, onde é possivel a alteração de quantidade do produto e navegação para a página do produto, ou pela página do carrinho , onde é mostrado todos  os produtos existentes no carrinho  e os detalhes sobre o preço dos produtos e preço total.
   
 ### Funcionalidades
-- Criar, deletar e editar um mes, criando movimentações e previsoes de entrada e saida
-- Sistema de login e autenticação utilizando Firebase authentication
-- Banco de dados utilizando Firebase Real time Database
-- Comunicação com o banco de dados utilizandoa SDK9 modular do firebase
-- Context API usada para validação do usuario
-- Sistema de login e criação de um novo usuario
-- Design criado com Bootstrap e React Bootstrap
+- Visualização dos produtos, marcas e categorias cadastrados no banco de dados
+- Filtragem dos produtos por marca ou categoria
+- Pagina detalhada do produto com todas as informações do mesmo: nome, marca, descrição, preço, cores, tamanhos, tensão elétrica, estoque, peso
+- Seleção de variações do produto. como tamanho para roupas(exemplo: P,M,G, 38,40) ou tensão elétrica para eletrônicos(110V, 120V ou Bivolt
+- Gerenciamento do carrinho pelo cabeçalho atraves do componente CartPreview, que sincroniza entre as abas abertas do site após alteração nos itens selecionados
+- Gerenciamento do carrinho na página do carrinho, onde mostra todos os produtos selecionados e os detalhes de preços da compra
+- Design 
 
 ## Pre requisitos
 
