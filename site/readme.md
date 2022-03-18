@@ -40,4 +40,29 @@ Possui duas formas de controlar o carrinho, através do cabeçalho pelo componen
 - [Embla Carousel](https://www.embla-carousel.com/)
 - [Sharp](https://github.com/lovell/sharp)
 
+## Paginas
+### Pagina inicial do DevShop
+Visualização e navegação apra os produtos, marcas e categorias cadastradas no banco de dados
+![localhost_3002_ (1)](https://user-images.githubusercontent.com/77676047/159062488-48d4383c-1957-46b9-8e78-54184dedaa08.png)
+### Pagina detalhes do produto
+Visualização dos detalhes e seleção do produto
+- Calçados
+![localhost_3002_produto_tenis-nike-sb-heritage-vulc](https://user-images.githubusercontent.com/77676047/159072149-8535abd5-2fb9-4dcd-836c-254a320cd5c5.png)
+- Roupas
+![localhost_3002_produto_tenis-nike-sb-heritage-vulc (1)](https://user-images.githubusercontent.com/77676047/159072308-0f23a9bd-69f1-4a5b-b98b-39d7e1484902.png)
+- Eletrônicos com tensão elétrica para selecionar
+![localhost_3002_ (2)](https://user-images.githubusercontent.com/77676047/159073028-d1ea1f72-fc25-4554-b6c4-72a432ac8cd5.png)
+
+- Outros Eletrônicos
+![localhost_3002_produto_tenis-nike-sb-heritage-vulc](https://user-images.githubusercontent.com/77676047/159072574-9117d843-9ba1-4d95-b72d-aa3336435e24.png)
+
+### Preview do carrinho
+Visualização e gerenciamento dos produtos adicionados ao carrinho, visualizando detalhes da seleção escolhida, aumentar a quantidade ou remover o produto do carrinho, ou navegar até a página do produto através do link no nome do produto. É sincronizado entre as abas abertas no navegador, ou seja, ao modificar o carrinho em uma página e depois navegar a outra já aberta, ele sincroniza os dados.
+![cartpreview](https://user-images.githubusercontent.com/77676047/159075161-9df3d618-5499-4b39-97f6-67aae7b0fd58.png)
+
+### Carrinho
+Visualização e gerenciamento dos produtos adicionados ao carrinho,
+![localhost_3002_cart](https://user-images.githubusercontent.com/77676047/159074656-02b4b6df-f216-4bad-ab2d-b0d5b580c332.png)
+
+
 
