@@ -36,8 +36,6 @@ Gerenciamento dos usuários que possuem acesso ao painel, como criação, ediç�
 - [GraphQl](https://graphql.org/) 
 - [useSWR](https://swr.vercel.app/)
 - [TailwindCSS](https://tailwindcss.com/)
-- [Embla Carousel](https://www.embla-carousel.com/)
-- [Sharp](https://github.com/lovell/sharp)
 - [Formik](https://formik.org/)
 - [Yup](https://github.com/jquense/yup)
 - [DateFns](https://date-fns.org/)
