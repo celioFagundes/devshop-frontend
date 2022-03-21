@@ -3,7 +3,7 @@
 - Acesse o repositório do Painel administrativo do DevShop [Painel Administrativo](https://github.com/celioFagundes/devshop-frontend/tree/master/panel).
 
 ### Pagina inicial do DevShop
-![localhost_3002_ (1)](https://user-images.githubusercontent.com/77676047/159062488-48d4383c-1957-46b9-8e78-54184dedaa08.png)
+![localhost_3002_ (2)](https://user-images.githubusercontent.com/77676047/159346955-810f7e03-ed16-4dac-ad5c-fba3470a4f76.png)
 
 ### Sobre o projeto
   Projeto DevShop , criação e gerenciamento de produtos utilizando NextJs, NestJs, Typescript, Javascript, TypeORM ,Postgres e AWS S3. Este é um projeto FullStack que conta com  3 repositórios :
@@ -47,7 +47,8 @@ Possui duas formas de controlar o carrinho, através do cabeçalho pelo componen
 ## Paginas
 ### Pagina inicial do DevShop
 Visualização e navegação apra os produtos, marcas e categorias cadastradas no banco de dados
-![localhost_3002_ (1)](https://user-images.githubusercontent.com/77676047/159062488-48d4383c-1957-46b9-8e78-54184dedaa08.png)
+![localhost_3002_ (2)](https://user-images.githubusercontent.com/77676047/159346975-962539b9-1e77-4128-8692-005dd9c13879.png)
+
 ### Pagina detalhes do produto
 Visualização dos detalhes e seleção do produto
 - Calçados
