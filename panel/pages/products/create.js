@@ -281,7 +281,7 @@ const CreateProduct = () => {
                   <Input.Checkbox
                     label={'120V'}
                     type='checkbox'
-                    checked={form.values.voltage.indexOf('Bivolt') >= 0}
+                    checked={form.values.voltage.indexOf('120V') >= 0}
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
                     name='voltage'
@@ -290,7 +290,7 @@ const CreateProduct = () => {
                   <Input.Checkbox
                     label={'220V'}
                     type='checkbox'
-                    checked={form.values.voltage.indexOf('Bivolt') >= 0}
+                    checked={form.values.voltage.indexOf('220V') >= 0}
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
                     name='voltage'
@@ -442,12 +442,10 @@ const CreateProduct = () => {
                                   }
                                 />
                               )}
-                              
+
                               {form.values.sizeType === 'clothes' && (
                                 <Select.SingleValues
-                                  label={
-                                    'Tamanho'
-                                  }
+                                  label={'Tamanho'}
                                   onChange={form.handleChange}
                                   onBlur={form.handleBlur}
                                   name={`variations.${index}.size`}
@@ -462,9 +460,7 @@ const CreateProduct = () => {
                               )}
                               {form.values.sizeType === 'shoes' && (
                                 <Select.SingleValues
-                                  label={
-                                    'Tamanho'
-                                  }
+                                  label={'Tamanho'}
                                   onChange={form.handleChange}
                                   onBlur={form.handleBlur}
                                   name={`variations.${index}.size`}
@@ -479,7 +475,6 @@ const CreateProduct = () => {
                               )}
                             </>
 
-                            
                             {index > 0 && (
                               <button
                                 type='button'

@@ -12,7 +12,7 @@ const Input = ({
   onBlur
 }) => {
   return (
-    <div className='mr-2 max-w-sm'>
+    <div className='mr-2 my-1 max-w-sm'>
       <label
         className='block uppercase tracking-wide text-gray-100 text-xs font-bold mb-2'
         htmlFor={'id-' + name}
@@ -22,7 +22,7 @@ const Input = ({
       <input
       onBlur = {onBlur}
         disabled={disabled}
-        className='appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-2 px-3 mb-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
+        className='appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-2 px-3  leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
         type={type}
         id={'id-' + name}
         placeholder={placeholder}
@@ -31,10 +31,10 @@ const Input = ({
         name={name}
       />
       {errorMessage && (
-        <p className='text-red-400 text-xs italic my-1'>{errorMessage}</p>
+        <p className='text-red-400 text-xs italic mb-1'>{errorMessage}</p>
       )}
       {helpText && (
-        <p className='text-blue-200 text-xs italicm my-1'>{helpText} </p>
+        <p className='text-blue-200 text-xs italicm mb-1'>{helpText} </p>
       )}
     </div>
   )

@@ -30,11 +30,10 @@ const Layout = ({ children }) => {
     localStorage.clear()
     router.push('/')
   }
-  console.log(data?.panelGetMe)
   const currentPage = router.pathname.split('/')[1]
   return (
     <div>
-      <div className={`flex h-screen bg-gray-900`}>
+      <div className={`flex min-h-screen bg-gray-900`}>
         <div
           className={`
             fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-slate-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0'

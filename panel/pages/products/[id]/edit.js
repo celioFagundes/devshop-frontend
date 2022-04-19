@@ -398,165 +398,159 @@ const EditProduct = () => {
                             Adicionar variação
                           </Button>
                         </div>
-                        {form.values.variations &&
-                          form.values.variations.map((variation, index) => (
-                            <div
-                              className='flex flex-row flex-wrap my-2 p-5 border border-gray-600 bg-gray-800 rounded relative'
-                              key={index}
-                            >
-                              <div className=' flex  flex-row items-start justify-center mr-2 mb-4 relative h-16 '>
-                                <Input
-                                  label='Nome e codigo da Cor'
-                                  placeholder='Nome da cor'
-                                  onChange={form.handleChange}
-                                  onBlur={form.handleBlur}
-                                  value={
-                                    form.values.variations[index].color
-                                      .colorName
-                                  }
-                                  name={`variations.${index}.color.colorName`}
-                                  errorMessage={
-                                    form.errors?.variations &&
-                                    form.errors.variations[index]?.color
-                                      ?.colorName &&
-                                    form.errors.variations[index].color
-                                      .colorName
-                                  }
-                                />
+                        {form.values.variations.map((variation, index) => (
+                          <div
+                            className='flex flex-row flex-wrap my-2 p-5 border border-gray-600 bg-gray-800 rounded relative'
+                            key={index}
+                          >
+                            <div className='flex flex-row flex-wrap items-start justify-between h'>
+                              <Input
+                                label='SKU'
+                                placeholder='Preencha o SKU da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].sku}
+                                name={`variations.${index}.sku`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.sku &&
+                                  form.errors.variations[index].sku
+                                }
+                              />
 
-                                <Input.Color
-                                  label='Codigo da Cor'
-                                  bgColor={
-                                    form.values.variations[index].color
-                                      .colorCode
-                                  }
-                                  placeholder='Preencha a cor'
-                                  onChange={form.handleChange}
-                                  onBlur={form.handleBlur}
-                                  value={
-                                    form.values.variations[index].color
-                                      .colorCode
-                                  }
-                                  name={`variations.${index}.color.colorCode`}
-                                />
-                              </div>
-                              <>
-                                {form.values.sizeType === 'measures' && (
-                                  <Input
-                                    label='Tamanho'
-                                    placeholder='Preencha o tamanho'
-                                    onChange={form.handleChange}
-                                    onBlur={form.handleBlur}
-                                    value={form.values.variations[index].size}
-                                    name={`variations.${index}.size`}
-                                    errorMessage={
-                                      form.errors?.variations &&
-                                      form.errors.variations[index]?.size &&
-                                      form.errors.variations[index].size
-                                    }
-                                  />
-                                )}
+                              <Input
+                                label='Preço'
+                                placeholder='Preencha o preço da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].price}
+                                name={`variations.${index}.price`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.price &&
+                                  form.errors.variations[index].price
+                                }
+                              />
 
-                                {form.values.sizeType === 'clothes' && (
-                                  <Select.SingleValues
-                                    label={'Tamanho'}
-                                    onChange={form.handleChange}
-                                    onBlur={form.handleBlur}
-                                    name={`variations.${index}.size`}
-                                    value={form.values.variations[index].size}
-                                    options={clothesSizes}
-                                    errorMessage={
-                                      form.errors?.variations &&
-                                      form.errors.variations[index]?.size &&
-                                      form.errors.variations[index].size
-                                    }
-                                  />
-                                )}
-                                {form.values.sizeType === 'shoes' && (
-                                  <Select.SingleValues
-                                    label={'Tamanho'}
-                                    onChange={form.handleChange}
-                                    onBlur={form.handleBlur}
-                                    name={`variations.${index}.size`}
-                                    value={form.values.variations[index].size}
-                                    options={shoesSizes}
-                                    errorMessage={
-                                      form.errors?.variations &&
-                                      form.errors.variations[index]?.size &&
-                                      form.errors.variations[index].size
-                                    }
-                                  />
-                                )}
-                              </>
+                              <Input
+                                label='Peso'
+                                placeholder='Preencha o peso da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].weight}
+                                name={`variations.${index}.weight`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.weight &&
+                                  form.errors.variations[index].weight
+                                }
+                              />
 
-                              <div className='flex flex-row flex-wrap items-start justify-between h'>
-                                <Input
-                                  label='SKU'
-                                  placeholder='Preencha o SKU da variação'
-                                  onChange={form.handleChange}
-                                  onBlur={form.handleBlur}
-                                  value={form.values.variations[index].sku}
-                                  name={`variations.${index}.sku`}
-                                  errorMessage={
-                                    form.errors?.variations &&
-                                    form.errors.variations[index]?.sku &&
-                                    form.errors.variations[index].sku
-                                  }
-                                />
-
-                                <Input
-                                  label='Preço'
-                                  placeholder='Preencha o preço da variação'
-                                  onChange={form.handleChange}
-                                  onBlur={form.handleBlur}
-                                  value={form.values.variations[index].price}
-                                  name={`variations.${index}.price`}
-                                  errorMessage={
-                                    form.errors?.variations &&
-                                    form.errors.variations[index]?.price &&
-                                    form.errors.variations[index].price
-                                  }
-                                />
-
-                                <Input
-                                  label='Peso'
-                                  placeholder='Preencha o peso da variação'
-                                  onChange={form.handleChange}
-                                  onBlur={form.handleBlur}
-                                  value={form.values.variations[index].weight}
-                                  name={`variations.${index}.weight`}
-                                  errorMessage={
-                                    form.errors?.variations &&
-                                    form.errors.variations[index]?.weight &&
-                                    form.errors.variations[index].weight
-                                  }
-                                />
-
-                                <Input
-                                  label='Estoque'
-                                  placeholder='Preencha o estoque da variação'
-                                  onChange={form.handleChange}
-                                  onBlur={form.handleBlur}
-                                  value={form.values.variations[index].stock}
-                                  name={`variations.${index}.stock`}
-                                  errorMessage={
-                                    form.errors?.variations &&
-                                    form.errors.variations[index]?.stock &&
-                                    form.errors.variations[index].stock
-                                  }
-                                />
-                              </div>
-                              {index > 0 && (
-                                <button
-                                  type='button'
-                                  className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400 absolute right-2 top-3'
-                                  onClick={() => arrayHelpers.remove(index)}
-                                >
-                                  X
-                                </button>
-                              )}
+                              <Input
+                                label='Estoque'
+                                placeholder='Preencha o estoque da variação'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={form.values.variations[index].stock}
+                                name={`variations.${index}.stock`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.stock &&
+                                  form.errors.variations[index].stock
+                                }
+                              />
                             </div>
-                          ))}
+                            <div className=' flex  flex-row items-start justify-center relative h-16 '>
+                              <Input
+                                label='Nome e codigo da Cor'
+                                placeholder='Nome da cor'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={
+                                  form.values.variations[index].color.colorName
+                                }
+                                name={`variations.${index}.color.colorName`}
+                                errorMessage={
+                                  form.errors?.variations &&
+                                  form.errors.variations[index]?.color
+                                    ?.colorName &&
+                                  form.errors.variations[index].color.colorName
+                                }
+                              />
+                              <Input.Color
+                                label='Codigo da Cor'
+                                bgColor={
+                                  form.values.variations[index].color.colorCode
+                                }
+                                placeholder='Preencha a cor'
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                value={
+                                  form.values.variations[index].color.colorCode
+                                }
+                                name={`variations.${index}.color.colorCode`}
+                              />
+                            </div>
+                            <>
+                              {form.values.sizeType === 'measures' && (
+                                <Input
+                                  label='Tamanho'
+                                  placeholder='Preencha o tamanho'
+                                  onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
+                                  value={form.values.variations[index].size}
+                                  name={`variations.${index}.size`}
+                                  errorMessage={
+                                    form.errors?.variations &&
+                                    form.errors.variations[index]?.size &&
+                                    form.errors.variations[index].size
+                                  }
+                                />
+                              )}
+
+                              {form.values.sizeType === 'clothes' && (
+                                <Select.SingleValues
+                                  label={'Tamanho'}
+                                  onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
+                                  name={`variations.${index}.size`}
+                                  value={form.values.variations[index].size}
+                                  options={clothesSizes}
+                                  errorMessage={
+                                    form.errors?.variations &&
+                                    form.errors.variations[index]?.size &&
+                                    form.errors.variations[index].size
+                                  }
+                                />
+                              )}
+                              {form.values.sizeType === 'shoes' && (
+                                <Select.SingleValues
+                                  label={'Tamanho'}
+                                  onChange={form.handleChange}
+                                  onBlur={form.handleBlur}
+                                  name={`variations.${index}.size`}
+                                  value={form.values.variations[index].size}
+                                  options={shoesSizes}
+                                  errorMessage={
+                                    form.errors?.variations &&
+                                    form.errors.variations[index]?.size &&
+                                    form.errors.variations[index].size
+                                  }
+                                />
+                              )}
+                            </>
+
+                            {index > 0 && (
+                              <button
+                                type='button'
+                                className='px-2 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-400 absolute right-2 top-3'
+                                onClick={() => arrayHelpers.remove(index)}
+                              >
+                                X
+                              </button>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     )
                   }}

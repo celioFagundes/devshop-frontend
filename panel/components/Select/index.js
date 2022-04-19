@@ -13,7 +13,7 @@ const Select = ({
   errorMessage,
 }) => {
   return (
-    <div className='mr-4 max-w-sm mb-2'>
+    <div className='mr-4 my-1 max-w-sm '>
       <label
         className='block uppercase tracking-wide text-gray-100 text-xs font-bold mb-2'
         htmlFor={'id-' + name}
@@ -60,7 +60,7 @@ const SingleValues = ({
   errorMessage,
 }) => {
   return (
-    <div className='mr-4 max-w-sm mb-2'>
+    <div className='mr-4 max-w-sm my-1'>
       <label
         className='block uppercase tracking-wide text-gray-100 text-xs font-bold mb-2'
         htmlFor={'id-' + name}

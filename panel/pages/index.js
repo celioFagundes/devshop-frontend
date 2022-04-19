@@ -68,7 +68,7 @@ const Index = () => {
             errorMessage={form.errors.email}
           />
           <Input
-            label='Password'
+            label='Senha'
             placeholder='Preencha sua senha'
             onChange={form.handleChange}
             value={form.values.password}
