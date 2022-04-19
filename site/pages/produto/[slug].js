@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { gql } from 'graphql-request'
 import Layout from '../../components/Layout'
 import { fetcher } from '../../lib/graphql'
-import { useEffect } from 'react/cjs/react.development'
 import { useCart } from '../../lib/CartContext'
 import EmblaCarousel from '../../components/Carousel/Carousel'
-
+import Seo from '../../components/Seo'
 const clothesSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG', 'EG', 'EGG']
 const shoesSizes = [
   '31',
@@ -77,7 +76,7 @@ const Products = ({ product, categories, brands }) => {
   const [sizeSelected, setSizeSelected] = useState('')
   const [voltageSelected, setVoltageSelected] = useState('')
   const [availableSizesForColor, setAvailableSizes] = useState([])
-  const [isOnCart, setIsOnCart ]=  useState(false)
+  const [isOnCart, setIsOnCart] = useState(false)
   const [selectedVariation, setSelectedVariation] = useState(
     product.variations[0],
   )
@@ -94,12 +93,15 @@ const Products = ({ product, categories, brands }) => {
   const updateIsOnCartOnFocus = () => {
     const loadedCart = JSON.parse(localStorage.getItem('cart'))
     if (loadedCart) {
-       if(Object.keys(loadedCart).indexOf(selectedVariation.sku + voltageSelected) >=0){
+      if (
+        Object.keys(loadedCart).indexOf(
+          selectedVariation.sku + voltageSelected,
+        ) >= 0
+      ) {
         setIsOnCart(true)
-       }
-       else{
+      } else {
         setIsOnCart(false)
-       }   
+      }
     }
   }
   const sizeIsAvailable = size => {
@@ -141,13 +143,12 @@ const Products = ({ product, categories, brands }) => {
     initialVariationAvailableSizes()
   }
   useEffect(() => {
-    window.addEventListener('focus', updateIsOnCartOnFocus)
+    window.addEventListener('focus', updateIsOnCartOnFocus, { passive: true })
     updateIsOnCartOnFocus()
     console.log('ta rodando')
     return () => {
       window.removeEventListener('focus', updateIsOnCartOnFocus)
     }
-    
   })
   useEffect(() => {
     updateAvailableSizes()
@@ -164,37 +165,40 @@ const Products = ({ product, categories, brands }) => {
     updateIsOnCartOnFocus()
   }, [colorSelected, sizeSelected])
 
-  useEffect(() =>{
+  useEffect(() => {
     updateIsOnCartOnFocus()
-  },[selectedVariation, cart.items])
+  }, [selectedVariation, cart.items])
 
   useEffect(() => {
     if (product.variations[0]) {
       initialSelectedVariation()
     }
   }, [product])
-  const removeFromCart  = () =>{
-    cart.removeFromCart(
-      selectedVariation.sku,
-      voltageSelected,
-    )
+  const removeFromCart = () => {
+    cart.removeFromCart(selectedVariation.sku, voltageSelected)
   }
   return (
     <Layout categories={categories} brands={brands}>
+      <Seo title={`${product.name}`} description={product.description} />
       {selectedVariation && (
-        <div className='container   text-center sm:text-left lg:px-5 py-10 mx-auto'>
+        <div className='container text-center sm:text-left lg:px-5 py-10 mx-auto bg-white rounded shadow-sm'>
           <div className='flex flex-wrap '>
             <div className='w-full lg:w-1/2'>
-              <EmblaCarousel slides={product.images} />
+              <EmblaCarousel
+                slides={product.images}
+                productName={product.name}
+              />
             </div>
             <div className='lg:w-1/2 w-full lg:pl-10 lg:py-2  mt-6 lg:mt-0 border-b-2 border-gray-200'>
-              <h2 className='text-sm title-font text-gray-500 tracking-widest'>
+              <h2 className='text-md title-font font-medium text-gray-900 tracking-widest'>
                 {product.brand.name}
               </h2>
               <h1 className='text-gray-900 text-3xl title-font font-medium mb-1'>
                 {product.name}
               </h1>
-              <p className='break-words'>{product.description}</p>
+              <p className='break-words font-medium text-sky-900'>
+                {product.description}
+              </p>
               <div className=' mt-2 items-center '>
                 <div className='my-2'>
                   <p className='title-font  font-medium text-lg text-gray-900'>
@@ -207,10 +211,11 @@ const Products = ({ product, categories, brands }) => {
                         key={possibleColors[item].name}
                       >
                         <div className='mr-2'>
-                          <p className='capitalize text-xs text-gray-400 my-1'>
+                          <p className='capitalize text-xs text-gray-900 my-1'>
                             {possibleColors[item].name}
                           </p>
                           <button
+                            name={`Cor: ${possibleColors[item].name}`}
                             onClick={() => {
                               setColorSelected(possibleColors[item].name)
                               setSizeSelected('')
@@ -222,10 +227,10 @@ const Products = ({ product, categories, brands }) => {
                               selectedVariation &&
                               selectedVariation.color.colorName ===
                                 possibleColors[item].name
-                                ? 'border-red-300'
+                                ? 'border-pink-500'
                                 : 'border-gray-400'
-                            } border-2  ml-1  rounded-full w-6 h-6 focus:outline-none`}
-                          ></button>
+                            } border-2  ml-1  rounded-full w-6 h-6 focus:outline-none text-transparent`}
+                          >Cor : {possibleColors[item].name}</button>
                         </div>
                       </div>
                     ))}
@@ -239,14 +244,15 @@ const Products = ({ product, categories, brands }) => {
                     <div className='relative'>
                       {clothesSizes.map(size => (
                         <button
+                          name={`Selecionar tamanho ${size}`}
                           key={size}
                           onClick={() =>
                             sizeIsAvailable(size) && setSizeSelected(size)
                           }
                           className={`mr-2 my-1 ${
                             sizeIsAvailable(size)
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-100 text-blue-400 before:'
+                              ? 'bg-blue-700 text-white'
+                              : 'bg-gray-200 text-blue-900 border border-gray-300'
                           } ${
                             selectedVariation &&
                             selectedVariation.size === size &&
@@ -262,18 +268,19 @@ const Products = ({ product, categories, brands }) => {
                     <div className='relative'>
                       {shoesSizes.map(size => (
                         <button
+                          name={`Selecionar tamanho ${size}`}
                           key={size}
                           onClick={() =>
                             sizeIsAvailable(size) && setSizeSelected(size)
                           }
                           className={`mr-2 my-1 ${
                             sizeIsAvailable(size)
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-100 text-blue-400 before:'
+                              ? 'bg-blue-700 text-white'
+                              : 'bg-gray-200 text-blue-900 border border-gray-300'
                           } ${
                             selectedVariation &&
                             selectedVariation.size === size &&
-                            'border-2 border-red-300 rounded'
+                            'border-2 border-pink-500 rounded'
                           } py-2 px-2 rounded  font-bold text-xs`}
                         >
                           {size}
@@ -334,16 +341,17 @@ const Products = ({ product, categories, brands }) => {
                 <p className='title-font font-medium  text-4xl text-gray-900'>
                   R$ {selectedVariation && selectedVariation.price}
                 </p>
-                {isOnCart
-                 ? (
+                {isOnCart ? (
                   <button
-                    onClick={ removeFromCart}
+                    name='Remover o produto selecionado do carrinho'
+                    onClick={removeFromCart}
                     className='w-full sm:w-60 text-center my-3 sm:my-0 ml-auto text-white bg-indigo-400 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
                   >
                     Remover do carrinho
                   </button>
                 ) : (
                   <button
+                    name='Adicionar o produto selecionado ao carrinho'
                     onClick={() =>
                       cart.addToCart(
                         product,

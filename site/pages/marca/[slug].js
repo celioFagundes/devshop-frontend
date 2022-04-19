@@ -2,6 +2,7 @@ import { gql } from 'graphql-request'
 import Layout from '../../components/Layout'
 import { fetcher } from '../../lib/graphql'
 import CardProduct from '../../components/CardProduct'
+import Seo from '../../components/Seo'
 
 const GET_ALL_CATEGORIES = gql`
   query {
@@ -40,7 +41,8 @@ const GET_ALL_PRODUCTS_BY_BRAND= gql`
 const ProductsByBrand = ({ products, categories , brands, marca}) => {
   return (
     <Layout categories={categories} brands = {brands}>
-      <p className='bg-blue-500 py-2 px-4 font-medium text-white mb-5'>Confira nossos produtos da marca {marca}</p>
+      <Seo title = {'Marca' + marca}/>
+      <p className='bg-blue-700 py-2 px-4 font-medium text-white mb-5'>Confira nossos produtos da marca {marca}</p>
       <section className='text-gray-600 body-font'>
         <div className='container px-5 py-24 mx-auto'>
           <div className='flex flex-wrap -m-4'>

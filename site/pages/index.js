@@ -53,7 +53,7 @@ const Index = ({ brands, categories, products }) => {
           <div>
           <Image
             alt='link para categoria smartphone'
-            src={'/images/banner.webp'}
+            src='/images/banner.webp'
             layout='responsive'
             width={1250}
             height={313}

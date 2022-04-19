@@ -23,7 +23,7 @@ const Header = ({ categories, brands }) => {
     <header className='text-white bg-blue-700 body-font'>
       <div className='container  mx-auto flex flex-wrap px-1 xs:px-5 py-2 md:p-5 flex-row justify-between items-center'>
         <div className='flex items-center justify-between'>
-          <Link href='/'>
+          <Link href={'/'} passHref>
             <a className='flex title-font font-medium items-center text-gray-900  md:mb-0'>
               <div className='bg-blue-500 px-2 py-2 rounded-full'>
                 <RiShoppingBag3Fill color='#fff' size={22} />

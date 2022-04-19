@@ -31,8 +31,8 @@ const CartPreview = () => {
     closeCart()
   }
   useEffect(() => {
-    window.addEventListener('focus', onFocus)
-    window.addEventListener('blur', onBlur)
+    window.addEventListener('focus', onFocus ,{passive: true})
+    window.addEventListener('blur', onBlur, {passive: true})
     onFocus()
     return () => {
       window.removeEventListener('focus', onFocus)

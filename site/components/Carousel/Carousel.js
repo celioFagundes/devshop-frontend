@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { Thumb } from './Thumb'
+import Image from 'next/image'
 
-const EmblaCarousel = ({ slides }) => {
+const EmblaCarousel = ({ slides , productName}) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [mainViewportRef, embla] = useEmblaCarousel({ skipSnaps: false })
   const [thumbViewportRef, emblaThumbs] = useEmblaCarousel({
@@ -42,11 +43,13 @@ const EmblaCarousel = ({ slides }) => {
             {slides ? (
               slides.map((item, index) => (
                 <div className='embla__slide' key={index}>
-                  <div className='embla__slide__inner'>
-                    <img
+                  <div className='embla__slide__inner'>      
+                    <Image
                       className='embla__slide__img'
                       src={item}
-                      alt='A cool cat.'
+                      alt= {productName}
+                      layout ='fill'
+                      priority      
                     />
                   </div>
                 </div>
@@ -54,33 +57,36 @@ const EmblaCarousel = ({ slides }) => {
             ) : (
               <div className='embla__slide'>
                 <div className='embla__slide__inner'>
-                  <img
-                    className='embla__slide__img'
-                    src='https://dummyimage.com/420x260'
-                    alt='sem imagem do produto'
-                  />
+                <Image
+                      className='embla__slide__img'
+                      src='https://dummyimage.com/420x260'
+                      alt= {productName}
+                      layout ='fill'
+                      priority      
+                    />
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
-
+      {slides && slides.length > 1 &&       
       <div className='embla embla--thumb'>
         <div className='embla__viewport' ref={thumbViewportRef}>
           <div className='embla__container embla__container--thumb'>
-            {slides && slides.length > 1 &&
-              slides.map((item, index) => (
+            
+              {slides.map((item, index) => (
                 <Thumb
                   onClick={() => onThumbClick(index)}
                   selected={index === selectedIndex}
                   imgSrc={item}
                   key={index}
+                  productName = {productName}
                 />
               ))}
           </div>
         </div>
-      </div>
+      </div>}
     </>
   )
 }
